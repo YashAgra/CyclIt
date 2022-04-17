@@ -30,8 +30,7 @@ public class Stand {
         this.cycleCount = cycleCount;
     }
 
-    public Stand(int id, String location, int cycleCount) {
-        this.id = id;
+    public Stand( String location, int cycleCount) {
         this.location = location;
         this.cycleCount = cycleCount;
     }
