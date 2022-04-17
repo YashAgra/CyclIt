@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Database {
     public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
     public static final String user = "root";
-    public static final String password = "12345678";
+    public static final String password = "";
     Connection connection = null;
     Database() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
