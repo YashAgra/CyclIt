@@ -24,7 +24,7 @@ public class Cyclit {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
         Reader.init(System.in);
-
+        Feedback.addFeedBack(3);
 
 //        while(true){
 //            System.out.println("1. Add Stand \n" +

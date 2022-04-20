@@ -12,7 +12,8 @@ public class Database {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(connection_url, user, password);
     }
-
+    // previous
+// previous code
 
    //executeUpdate: create update, delete
     public static void addStand(Stand stand) throws SQLException {
@@ -111,6 +112,15 @@ public class Database {
         query.close();
     }
 
+// new code
+    public static void addFeedBack(Feedback feed) throws SQLException {
+        PreparedStatement query= connection.prepareStatement("INSERT INTO feedback(user_id,feedback) values(?,?) ");
+        query.setInt(1,feed.getUserId());
+        query.setString(2,feed.getFeedback());
+
+        query.executeUpdate();
+        query.close();
+    }
 
 
 }
