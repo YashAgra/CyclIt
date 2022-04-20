@@ -22,6 +22,37 @@ public class Cyclit {
     }
 
 
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
+        Reader.init(System.in);
+
+
+//        while(true){
+//            System.out.println("1. Add Stand \n" +
+//                    " 2. for list stand by id \n " +
+//                    " 3. to list all stand \n" +
+//
+//                    " 4. Add Cycle \n "+
+//
+//                    " -1. to exit:\n ");
+//            int i =Reader.nextInt();
+//            if(i==1) addStand();
+//            if(i==2) listStandById();
+//            if(i==3) listAllStand();
+//            if(i==-1) break;
+//
+//            switch(i){
+//                case 1: addStand();
+//                case 2: listStandById();
+//                case 3: listAllStand();
+//                case 4: addCycle();
+//                case -1: break;
+//            }
+//        }
+
+
+    }
+
+    //-------------------------Stands--------------------------------------------------------
     public static void addStand() throws IOException, SQLException {
         System.out.println("Enter Stand Location: ");
         String address = Reader.nextLine();
@@ -30,20 +61,6 @@ public class Cyclit {
         Stand stand = new Stand(address,cycles);
         db.addStand(stand);
         //input number
-
-    }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        Reader.init(System.in);
-        while(true){
-            System.out.println("1 for add stand, 2 for list stand by id, 3 to list all stand, -1 to exit: ");
-            int i =Reader.nextInt();
-            if(i==1) addStand();
-            if(i==2) listStandById();
-            if(i==3) listAllStand();
-            if(i==-1) break;
-        }
-
 
     }
 
@@ -60,6 +77,16 @@ public class Cyclit {
         for(int i=0;i<standList.size();i++){
             System.out.println("Stand Info--- Id: "+ standList.get(i).getId()+ " Location: "+ standList.get(i).getLocation()+" No. of cycles Available: "+ standList.get(i).getCycleCount());
         }
+    }
+
+    //-------------------------Cycle--------------------------------------------------------
+
+    private static void addCycle() throws IOException, SQLException, ClassNotFoundException {
+        Cycle.addCycle();
+    }
+
+    private static void UpdateCycleStandByCid(){
+       // Cycle.UpdateCycleStandId();
     }
 }
 class Reader {
