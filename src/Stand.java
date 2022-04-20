@@ -34,4 +34,6 @@ public class Stand {
         this.location = location;
         this.cycleCount = cycleCount;
     }
+
+
 }

@@ -35,13 +35,13 @@ public class Cyclit {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
         Reader.init(System.in);
-        while(true){
+        while(true) {
             System.out.println("1 for add stand, 2 for list stand by id, 3 to list all stand, -1 to exit: ");
-            int i =Reader.nextInt();
-            if(i==1) addStand();
-            if(i==2) listStandById();
-            if(i==3) listAllStand();
-            if(i==-1) break;
+            int i = Reader.nextInt();
+            if (i == 1) Employee.addtodb();
+            if (i == 2) Employee.updatedb(2);
+            if (i == 3) Employee.deletefromdb(2);
+            if (i == -1) break;
         }
 
 
