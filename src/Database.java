@@ -12,8 +12,7 @@ public class Database {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(connection_url, user, password);
     }
-    // previous
-// previous code
+
 
    //executeUpdate: create update, delete
     public static void addStand(Stand stand) throws SQLException {
@@ -112,15 +111,52 @@ public class Database {
         query.close();
     }
 
-// new code
     public static void addFeedBack(Feedback feed) throws SQLException {
         PreparedStatement query= connection.prepareStatement("INSERT INTO feedback(user_id,feedback) values(?,?) ");
-        query.setInt(1,feed.getUserId());
+        query.setInt(1,feed.getUser_id());
         query.setString(2,feed.getFeedback());
 
         query.executeUpdate();
         query.close();
     }
+
+    public static void addPayInterface(Payment_interface pay) throws SQLException {
+        PreparedStatement query= connection.prepareStatement("INSERT INTO payment_interface(user_id,amount,isWalletRecharge,status) values(?,?,?,?) ");
+        query.setInt(1,pay.getUser_id());
+        query.setInt(2,pay.getAmount());
+        query.setBoolean(3,pay.isWalletRecharge());
+        query.setBoolean(4,pay.getStatus());
+
+        query.executeUpdate();
+        query.close();
+    }
+
+    public static void UpdatePayInter_wallet(int user_id, boolean isWallet) throws SQLException {
+        PreparedStatement query= connection.prepareStatement("UPDATE payment_interface SET isWalletRecharge=? where user_id=?");
+        query.setBoolean(1,isWallet);
+        query.setInt(2,user_id);
+
+        query.executeUpdate();
+        query.close();
+    }
+
+    public static void UpdatePayInter_status(int user_id, boolean status) throws SQLException {
+        PreparedStatement query= connection.prepareStatement("UPDATE payment_interface SET status=? where user_id=?");
+        query.setBoolean(1,status);
+        query.setInt(2,user_id);
+
+        query.executeUpdate();
+        query.close();
+    }
+
+    public static void deletePayInterface_byUserId(int user_id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("DELETE from payment_interface where user_id=?");
+        query.setInt(1,user_id);
+        query.executeUpdate();
+        query.close();
+    }
+
+
 
 
 }

@@ -24,30 +24,9 @@ public class Cyclit {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
         Reader.init(System.in);
-        Feedback.addFeedBack(3);
 
-//        while(true){
-//            System.out.println("1. Add Stand \n" +
-//                    " 2. for list stand by id \n " +
-//                    " 3. to list all stand \n" +
-//
-//                    " 4. Add Cycle \n "+
-//
-//                    " -1. to exit:\n ");
-//            int i =Reader.nextInt();
-//            if(i==1) addStand();
-//            if(i==2) listStandById();
-//            if(i==3) listAllStand();
-//            if(i==-1) break;
-//
-//            switch(i){
-//                case 1: addStand();
-//                case 2: listStandById();
-//                case 3: listAllStand();
-//                case 4: addCycle();
-//                case -1: break;
-//            }
-//        }
+        //Payment_interface.deletePayInterface_byUserId(3);
+
 
 
     }
