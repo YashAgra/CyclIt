@@ -14,6 +14,8 @@ public class Database {
     }
 
    //executeUpdate: create update, delete
+
+    /*===============================STAND TABLE FUNCTIONS==========================================================*/
     public void addStand(Stand stand) throws SQLException {
         PreparedStatement query = connection.prepareStatement("INSERT INTO stand(location, cycleCount) values(?,?)");
         query.setString(1, stand.getLocation());
@@ -48,4 +50,27 @@ public class Database {
         }
         return stand;
     }
+//    public void updateStandLocation(Stand stand) throws SQLException {
+//        PreparedStatement query = connection.prepareStatement("update stand set location = ? where id = ?");
+//        query.setString(1, stand.getLocation());
+//        query.setInt(2, stand.getId());
+//        query.executeUpdate();
+//        query.close();
+//    }
+    public void updateStandCycles(Stand stand) throws SQLException{
+        PreparedStatement query = connection.prepareStatement("update stand set cycleCount = ? where id = ?");
+        query.setInt(1, stand.getCycleCount());
+        query.setInt(2, stand.getId());
+        query.executeUpdate();
+        query.close();
+    }
+
+    public void deleteStand(int id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("delete from stand where id = ?");
+        query.setInt(1, id);
+        query.executeUpdate();
+        query.close();
+    }
+    //==================================================================================================================
+
 }
