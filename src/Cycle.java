@@ -125,7 +125,7 @@ public class Cycle {
         Cyclit.db.deleteCycle(cid);
     }
 
-
+    //TODO LIST ALL CYCLES
 
 
 }
