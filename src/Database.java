@@ -104,6 +104,25 @@ public class Database {
         return c;
     }
 
+    public static ArrayList<Cycle> getAllCycle() throws SQLException, ClassNotFoundException {
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery("SELECT * FROM cycle");
+        ArrayList<Cycle> returnList = new ArrayList<>();
+        while(resultSet.next()){
+            Cycle cycle = new Cycle();
+            cycle.setCycle_id(resultSet.getInt("cycle_id"));
+            cycle.setCycle_qr((resultSet.getString("cycle_qr")));
+            cycle.setInUse(resultSet.getBoolean("inUse"));
+            cycle.setStand_id(resultSet.getInt("stand_id"));
+            cycle.setInRepair(resultSet.getBoolean("InRepair"));
+            cycle.setModel_no(resultSet.getString("model_no"));
+
+            returnList.add(cycle);
+        }
+
+        return returnList;
+    }
+
     public void deleteCycle(int cid) throws SQLException {
         PreparedStatement query = connection.prepareStatement("DELETE from cycle where cycle_id=?");
         query.setInt(1,cid);
@@ -118,6 +137,22 @@ public class Database {
 
         query.executeUpdate();
         query.close();
+    }
+
+    public static ArrayList<Feedback> getAllFeedback() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery("SELECT * FROM feedback");
+        ArrayList<Feedback> returnList = new ArrayList<>();
+        while(resultSet.next()){
+            Feedback feed = new Feedback();
+            feed.setFeedback_id(resultSet.getInt("feedback_id"));
+            feed.setUser_id(resultSet.getInt("user_id"));
+            feed.setFeedback(resultSet.getString("feedback"));
+            returnList.add(feed);
+        }
+
+        return returnList;
+
     }
 
     public static void addPayInterface(Payment_interface pay) throws SQLException {
@@ -155,6 +190,8 @@ public class Database {
         query.executeUpdate();
         query.close();
     }
+
+
 
 
 

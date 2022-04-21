@@ -1,9 +1,13 @@
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 
 public class Cycle {
+
+    //TODO:   also have to make cycle_qr as a primary key / unique key  . as 2 cycles with same qr_code are getting inserted.
+
 
     private int cycle_id;
     private String cycle_qr;
@@ -123,6 +127,10 @@ public class Cycle {
 
     public static void deleteCyclefromdb(int cid) throws SQLException {
         Cyclit.db.deleteCycle(cid);
+    }
+
+    public static ArrayList<Cycle> getAllCycle() throws SQLException, ClassNotFoundException {
+        return Cyclit.db.getAllCycle();
     }
 
 

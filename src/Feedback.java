@@ -1,6 +1,7 @@
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Feedback {
 
@@ -42,6 +43,10 @@ public class Feedback {
         feed.feedback=feedback;
 
         Cyclit.db.addFeedBack(feed);
+    }
+
+    public static ArrayList<Feedback> getAllFeedback() throws SQLException {
+        return Cyclit.db.getAllFeedback();
     }
 
 
