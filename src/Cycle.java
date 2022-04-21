@@ -1,0 +1,141 @@
+
+import java.io.IOException;
+import java.sql.*;
+import java.util.ArrayList;
+
+
+public class Cycle {
+
+    //TODO:   also have to make cycle_qr as a primary key / unique key  . as 2 cycles with same qr_code are getting inserted.
+
+
+    private int cycle_id;
+    private String cycle_qr;
+    private boolean inUse;
+    private int stand_id;
+    private boolean inRepair;
+    private String model_no;
+
+    public int getCycle_id() {
+
+        return cycle_id;
+    }
+
+    public void setCycle_id(int cycle_id) {
+        this.cycle_id = cycle_id;
+    }
+
+    public String getCycle_qr() {
+        return cycle_qr;
+    }
+
+    public void setCycle_qr(String cycle_qr) {
+        this.cycle_qr = cycle_qr;
+    }
+
+    public boolean getInUse() {
+        return inUse;
+    }
+
+    public void setInUse(boolean inUse) {
+        this.inUse = inUse;
+    }
+
+    public int getStand_id() {
+        return stand_id;
+    }
+
+    public void setStand_id(int stand_id) {
+        this.stand_id = stand_id;
+    }
+
+    public boolean getInRepair() {
+        return inRepair;
+    }
+
+    public void setInRepair(boolean inRepair) {
+        this.inRepair = inRepair;
+    }
+
+    public String getModel_no() {
+        return model_no;
+    }
+
+    public void setModel_no(String model_no) {
+        this.model_no = model_no;
+    }
+
+    public Cycle() throws SQLException, ClassNotFoundException {}
+
+    public Cycle(int cycle_id, String cycle_qr, boolean inUse , int stand_id , boolean inRepair, String model_no ) throws SQLException, ClassNotFoundException {
+        this.cycle_id=cycle_id;     this.cycle_qr=cycle_qr;     this.inUse=inUse;
+        this.stand_id=stand_id;     this.inRepair=inRepair;     this.model_no=model_no;
+    }
+
+    public static void addCycle() throws SQLException, ClassNotFoundException, IOException {
+        Cycle cycle=new Cycle();
+
+        System.out.print("Enter cycle_QR_Code (string) :");
+        cycle.cycle_qr=Reader.nextLine();
+
+        cycle.inUse=false;
+
+        System.out.print("Cycle is in which stand (int) :");
+        cycle.stand_id=Reader.nextInt();
+
+        cycle.inRepair=false;
+
+        System.out.print("Enter Model No (string) :");
+        cycle.model_no=Reader.nextLine();
+
+        Cyclit.db.addCycle(cycle);
+
+    }
+
+    public static void UpdateCycleStandId(int cid) throws SQLException, ClassNotFoundException, IOException{
+
+        System.out.println("Enter new stand_id:");
+        int sid=Reader.nextInt();
+
+        Cyclit.db.updateCycleStandId(cid,sid);
+
+    }
+
+    public static void UpdateCycleInUse(int cid) throws SQLException, ClassNotFoundException, IOException{
+        System.out.println("Enter 1 if cycle in use /else 0:");
+        int use=Reader.nextInt();
+        boolean flag= false;
+        if(use>=1) flag=true;
+
+        Cyclit.db.UpdateCycleInUse(cid,flag);
+
+
+    }
+
+    public static void UpdateCycleInRepair(int cid) throws SQLException, ClassNotFoundException, IOException{
+        System.out.println("Enter 1 if cycle in repair /else 0:");
+        int repair=Reader.nextInt();
+        boolean flag= false;
+        if(repair>=1) flag=true;
+
+        Cyclit.db.UpdateCycleInRepair(cid,flag);
+    }
+
+    public static Cycle getCyleFromDb(int cid) throws SQLException, ClassNotFoundException {
+        return Cyclit.db.getCycleinfo(cid);
+    }
+
+    public static void deleteCyclefromdb(int cid) throws SQLException {
+        Cyclit.db.deleteCycle(cid);
+    }
+
+    public static ArrayList<Cycle> getAllCycle() throws SQLException, ClassNotFoundException {
+        return Cyclit.db.getAllCycle();
+    }
+
+
+
+
+}
+
+
