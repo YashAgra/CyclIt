@@ -6,8 +6,9 @@ import java.util.ArrayList;
 public class Database {
     public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
     public static final String user = "root";
-    public static final String password = "ujjwal";
-    public static Connection connection = null;
+    public static final String password = "123456789";
+    Connection connection = null;
+
     Database() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(connection_url, user, password);
@@ -51,6 +52,36 @@ public class Database {
             stand.setCycleCount(resultSet.getInt("cycleCount"));
         }
         return stand;
+    }
+
+
+    public Employee getEmployee(int id) throws SQLException, ClassNotFoundException {
+        PreparedStatement query = connection.prepareStatement("SELECT * FROM Employee WHERE EmployeeID = ?");
+        query.setInt(1,id);
+        ResultSet resultSet = query.executeQuery();
+        Employee employ = new Employee();
+        while(resultSet.next()){
+            employ.setEmployeeId(resultSet.getInt("EmployeeID"));
+            employ.setAddress(resultSet.getString("Address"));
+            employ.setEmailAddress(resultSet.getString("EmailAddress"));
+            employ.setPhoneNumber(resultSet.getString("PhoneNumber"));
+            employ.setType(resultSet.getString("Type"));
+            employ.setName(resultSet.getString("Name"));
+            employ.setSalary(resultSet.getInt("Salary"));
+        }
+        return employ;
+    }
+
+    public void addEmployee(Employee employee) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, EmailAddress, PhoneNumber, Type, Name, Salary) values(?,?,?,?,?,?)");
+        query.setString(1,employee.getAddress());
+        query.setString(2, employee.getEmailAddress());
+        query.setString(3, employee.getPhoneNumber());
+        query.setString(4, employee.getType());
+        query.setString(5, employee.getName());
+        query.setInt(6,employee.getSalary());
+        query.executeUpdate();
+        query.close();
     }
 
     public void addCycle(Cycle cycle) throws SQLException{
@@ -142,14 +173,31 @@ public class Database {
         query.close();
     }
 
+
+    public void deleteEmployee(int id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("DELETE FROM Employee where EmployeeID = ?");
+        query.setInt(1,id);
+          query.executeUpdate();
+        query.close();
+}
     public static void addFeedBack(Feedback feed) throws SQLException {
         PreparedStatement query= connection.prepareStatement("INSERT INTO feedback(user_id,feedback) values(?,?) ");
         query.setInt(1,feed.getUser_id());
         query.setString(2,feed.getFeedback());
-
         query.executeUpdate();
         query.close();
     }
+
+    public void updateEmployee(Employee employee) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("UPDATE Employee set Name = ?,PhoneNumber = ?,Address = ? where EmployeeID = ? ");
+        //query.setString(1,col);
+        query.setString(1,employee.getName());
+        query.setString(2,employee.getPhoneNumber());
+        query.setString(3,employee.getAddress());
+        query.setInt(4,employee.getEmployeeId());
+          query.executeUpdate();
+        query.close();
+}
 
     public static ArrayList<Feedback> getAllFeedback() throws SQLException {
         Statement query = connection.createStatement();
@@ -173,10 +221,32 @@ public class Database {
         query.setInt(2,pay.getAmount());
         query.setBoolean(3,pay.isWalletRecharge());
         query.setBoolean(4,pay.getStatus());
-
         query.executeUpdate();
         query.close();
     }
+
+
+    public void addUser(User user) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("INSERT INTO User(Address, EmailAddress, PhoneNumber, Name,RollNumber,Password,Wallet,Year) values(?,?,?,?,?,?,?,?)");
+        query.setString(1,user.getAddress());
+        query.setString(2,user.getEmailID());
+        query.setString(3,user.getPhoneNumber());
+        query.setString(4, user.getName());
+        query.setInt(5, user.getRollNumber());
+        query.setString(6,user.getPassword());
+        query.setInt(7,user.getWallet());
+        query.setInt(8,user.getYear());
+        query.executeQuery();
+        query.close();
+    }
+
+    public void deleteUser(int id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("DELETE FROM User where UserID = ?");
+        query.setInt(1,id);
+        query.executeUpdate();
+        query.close();
+    }
+   
 
     public static void UpdatePayInter_wallet(int user_id, boolean isWallet) throws SQLException {
         PreparedStatement query= connection.prepareStatement("UPDATE payment_interface SET isWalletRecharge=? where user_id=?");
@@ -191,10 +261,34 @@ public class Database {
         PreparedStatement query= connection.prepareStatement("UPDATE payment_interface SET status=? where user_id=?");
         query.setBoolean(1,status);
         query.setInt(2,user_id);
-
         query.executeUpdate();
         query.close();
     }
+
+    public User getUser(int id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("SELECT * FROM User WHERE UserID = ?");
+        query.setInt(1,id);
+        ResultSet resultSet = query.executeQuery();
+        User user = new User();
+        while(resultSet.next()){
+            user.setUserID(resultSet.getInt("UserID"));
+            user.setPassword(resultSet.getString("Password"));
+            user.setPhoneNumber(resultSet.getString("PhoneNumber"));
+        }
+        return user;
+    }
+
+    public void updateUser(User user) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("UPDATE User set Name = ?,PhoneNumber = ?,Address = ?,Password = ? where UserID = ? ");
+        query.setString(1,user.getName());
+        query.setString(2,user.getPhoneNumber());
+        query.setString(3,user.getAddress());
+        query.setString(4,user.getPassword());
+        query.setInt(5,user.getUserID());
+        query.executeUpdate();
+        query.close();
+    }
+    //public static Employee getEmployee(String type){}
 
     public static void deletePayInterface_byUserId(int user_id) throws SQLException {
         PreparedStatement query = connection.prepareStatement("DELETE from payment_interface where user_id=?");
@@ -210,6 +304,4 @@ public class Database {
         query.close();
     }
     //==================================================================================================================
-
-
 }

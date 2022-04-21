@@ -36,6 +36,7 @@ public class Cyclit {
 
     }
 
+
     private static void listStandById() throws IOException, SQLException {
         System.out.println("enter stand id: ");
         int id = Reader.nextInt();
