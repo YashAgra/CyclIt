@@ -15,7 +15,10 @@ public class Database {
 
 
    //executeUpdate: create update, delete
+
     public static void addStand(Stand stand) throws SQLException {
+    /*===============================STAND TABLE FUNCTIONS==========================================================*/
+
         PreparedStatement query = connection.prepareStatement("INSERT INTO stand(location, cycleCount) values(?,?)");
         query.setString(1, stand.getLocation());
         query.setInt(2, stand.getCycleCount());
@@ -85,6 +88,15 @@ public class Database {
         query.executeUpdate();
         query.close();
     }
+
+    public void updateStandCycles(Stand stand) throws SQLException{
+        PreparedStatement query = connection.prepareStatement("update stand set cycleCount = ? where id = ?");
+        query.setInt(1, stand.getCycleCount());
+        query.setInt(2, stand.getId());
+        query.executeUpdate();
+        query.close();
+    }
+
 
 
     public Cycle getCycleinfo(int cid) throws SQLException, ClassNotFoundException {
@@ -191,9 +203,13 @@ public class Database {
         query.close();
     }
 
-
-
-
+    public void deleteStand(int id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("delete from stand where id = ?");
+        query.setInt(1, id);
+        query.executeUpdate();
+        query.close();
+    }
+    //==================================================================================================================
 
 
 }
