@@ -3,7 +3,7 @@ import java.sql.SQLException;
 
 public class User {
     private int UserID;
-    private int RollorfacNumber;
+    private int RollNumber;
     private String Name;
     private String Address;
     private String EmailID;
@@ -20,12 +20,12 @@ public class User {
         UserID = userID;
     }
 
-    public int getRollorfacNumber() {
-        return RollorfacNumber;
+    public int getRollNumber() {
+        return RollNumber;
     }
 
-    public void setRollorfacNumber(int rollorfacNumber) {
-        RollorfacNumber = rollorfacNumber;
+    public void setRollNumber(int rollorfacNumber) {
+        RollNumber = rollorfacNumber;
     }
 
     public String getName() {
@@ -84,10 +84,13 @@ public class User {
         this.wallet = wallet;
     }
 
-    static void addtodb() throws IOException {
+    static void addtodb() throws IOException, SQLException {
         User user = new User();
         System.out.println("Name : ");
         user.setName(Reader.nextLine());
+
+        System.out.println("RollNumber : ");
+        user.setRollNumber(Reader.nextInt());
 
         System.out.println("EmailID : ");
         user.setEmailID(Reader.nextLine());
@@ -100,11 +103,48 @@ public class User {
 
         System.out.println("Password : ");
         user.setPassword(Reader.nextLine());
-
-
+        user.setWallet(0);
+        user.setYear(user.getRollNumber()/1000);
+        Cyclit.db.addUser(user);
     }
 
     static User getfromdb(int id) throws SQLException {
         return Cyclit.db.getUser(id);
+    }
+
+    static void updatedb(int id) throws SQLException, IOException {
+        User user = getfromdb(id);
+
+        int i;
+        while(true){
+            System.out.println("1. Change Name");
+            System.out.println("2. Change Address");
+            System.out.println("3. Change PhoneNumber");
+            System.out.println("4. Change Password");
+            System.out.println("5. exit");
+
+            i = Reader.nextInt();
+            if(i==1){
+                System.out.println("Name : ");
+                user.setName(Reader.nextLine());
+            }
+            else if (i==2){
+                System.out.println("Address :");
+                user.setAddress(Reader.nextLine());
+            } else if (i==3) {
+                System.out.println("PhoneNumber : ");
+                user.setPhoneNumber(Reader.nextLine());
+            } else if (i==4) {
+                System.out.println("NewPassword : ");
+                user.setPassword(Reader.nextLine());
+            } else {
+                break;
+            }
+        }
+        Cyclit.db.updateUser(user);
+    }
+
+    static void deletefromdb(int id) throws SQLException {
+        Cyclit.db.deleteUser(id);
     }
 }

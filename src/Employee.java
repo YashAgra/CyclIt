@@ -76,8 +76,7 @@ public class Employee {
 
     static void addtodb() throws IOException, SQLException, ClassNotFoundException {
         Employee employee = new Employee();
-        System.out.println("ID: ");
-        employee.setEmployeeId(Reader.nextInt());
+
         System.out.println("Name : ");
         employee.setName(Reader.nextLine());
 

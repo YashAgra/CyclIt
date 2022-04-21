@@ -67,14 +67,13 @@ public class Database {
     }
 
     public void addEmployee(Employee employee) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(EmployeeID,Address, EmailAddress, PhoneNumber, Type, Name, Salary) values(?,?,?,?,?,?,?)");
-        query.setInt(1,employee.getEmployeeId());
-        query.setString(2,employee.getAddress());
-        query.setString(3, employee.getEmailAddress());
-        query.setString(4, employee.getPhoneNumber());
-        query.setString(5, employee.getType());
-        query.setString(6, employee.getName());
-        query.setInt(7,employee.getSalary());
+        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, EmailAddress, PhoneNumber, Type, Name, Salary) values(?,?,?,?,?,?)");
+        query.setString(1,employee.getAddress());
+        query.setString(2, employee.getEmailAddress());
+        query.setString(3, employee.getPhoneNumber());
+        query.setString(4, employee.getType());
+        query.setString(5, employee.getName());
+        query.setInt(6,employee.getSalary());
         query.executeUpdate();
         query.close();
     }
@@ -97,8 +96,18 @@ public class Database {
         query.close();
     }
 
-    public void addUser() throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO User(UserID,Address, EmailAddress, PhoneNumber, Name,RollorfacNumber,Password) values(?,?,?,?,?,?,?)");
+    public void addUser(User user) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("INSERT INTO User(Address, EmailAddress, PhoneNumber, Name,RollNumber,Password,Wallet,Year) values(?,?,?,?,?,?,?,?)");
+        query.setString(1,user.getAddress());
+        query.setString(2,user.getEmailID());
+        query.setString(3,user.getPhoneNumber());
+        query.setString(4, user.getName());
+        query.setInt(5, user.getRollNumber());
+        query.setString(6,user.getPassword());
+        query.setInt(7,user.getWallet());
+        query.setInt(8,user.getYear());
+        query.executeQuery();
+        query.close();
     }
 
     public void deleteUser(int id) throws SQLException {
@@ -119,6 +128,17 @@ public class Database {
             user.setPhoneNumber(resultSet.getString("PhoneNumber"));
         }
         return user;
+    }
+
+    public void updateUser(User user) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("UPDATE User set Name = ?,PhoneNumber = ?,Address = ?,Password = ? where UserID = ? ");
+        query.setString(1,user.getName());
+        query.setString(2,user.getPhoneNumber());
+        query.setString(3,user.getAddress());
+        query.setString(4,user.getPassword());
+        query.setInt(5,user.getUserID());
+        query.executeUpdate();
+        query.close();
     }
     //public static Employee getEmployee(String type){}
 }
