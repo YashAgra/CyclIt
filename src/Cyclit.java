@@ -22,6 +22,9 @@ public class Cyclit {
     }
 
 
+
+
+    //-------------------------Stands--------------------------------------------------------
     public static void addStand() throws IOException, SQLException {
         System.out.println("Enter Stand Location: ");
         String address = Reader.nextLine();
@@ -33,19 +36,6 @@ public class Cyclit {
 
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        Reader.init(System.in);
-        while(true) {
-            System.out.println("1 for add stand, 2 for list stand by id, 3 to list all stand, -1 to exit: ");
-            int i = Reader.nextInt();
-            if (i == 1) Employee.addtodb();
-            if (i == 2) Employee.updatedb(2);
-            if (i == 3) Employee.deletefromdb(2);
-            if (i == -1) break;
-        }
-
-
-    }
 
     private static void listStandById() throws IOException, SQLException {
         System.out.println("enter stand id: ");
@@ -59,7 +49,30 @@ public class Cyclit {
         ArrayList<Stand> standList = db.getAllStand();
         for(int i=0;i<standList.size();i++){
             System.out.println("Stand Info--- Id: "+ standList.get(i).getId()+ " Location: "+ standList.get(i).getLocation()+" No. of cycles Available: "+ standList.get(i).getCycleCount());
+
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
+        Reader.init(System.in);
+        while(true){
+            System.out.println("1 for add stand, 2 for list stand by id, 3 to list all stand, -1 to exit: ");
+            int i =Reader.nextInt();
+            if(i==1) Stand.addStand();
+            if(i==2) Stand.getById();
+            if(i==3) Stand.listAll();
+            if(i==4) Stand.deleteStand();
+            if(i==-1) break;
+
         }
+    }
+
+    //-------------------------Cycle--------------------------------------------------------
+
+    private static void addCycle() throws IOException, SQLException, ClassNotFoundException {
+        Cycle.addCycle();
+    }
+
+    private static void UpdateCycleStandByCid(){
+       // Cycle.UpdateCycleStandId();
     }
 }
 class Reader {
