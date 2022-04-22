@@ -2,6 +2,7 @@ import com.mysql.cj.x.protobuf.MysqlxPrepare;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.function.LongToIntFunction;
 
 public class Database {
     public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
@@ -139,6 +140,36 @@ public class Database {
         query.setInt(5,user.getUserID());
         query.executeUpdate();
         query.close();
+    }
+
+    public void addOngoingRides(OngoingRides ride) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("Insert Into OngoigRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
+        query.setInt(1,ride.getUSerID());
+        query.setInt(2,ride.getCycleID());
+        query.setInt(3,ride.getStandID());
+        query.setString(4,ride.getOutTime());
+        query.executeQuery();
+        query.close();
+
+    }
+
+    public void deleteOngoigRides(int id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("Delete from OngoigRides where UserID = ?");
+        query.setInt(1,id);
+        query.executeQuery();
+        query.close();
+    }
+
+    public OngoingRides getOngoigRides(int id) throws SQLException {
+        OngoingRides ride = new OngoingRides();
+        PreparedStatement query = connection.prepareStatement("Select * from OngoigRides where UserId = ?");
+        query.setInt(1,id);
+        ResultSet resultSet = query.executeQuery();
+        ride.setUSerID(resultSet.getInt("UserID"));
+        ride.setCycleID(resultSet.getInt("CycleID"));
+        ride.setStandID(resultSet.getInt("StandID"));
+        ride.setOutTime(resultSet.getString("OutTime"));
+        return ride;
     }
     //public static Employee getEmployee(String type){}
 }
