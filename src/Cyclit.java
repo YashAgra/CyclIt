@@ -47,9 +47,10 @@ public class Cyclit {
 
     private static void listAllStand() throws SQLException {
         ArrayList<Stand> standList = db.getAllStand();
-        for(int i=0;i<standList.size();i++){
-            System.out.println("Stand Info--- Id: "+ standList.get(i).getId()+ " Location: "+ standList.get(i).getLocation()+" No. of cycles Available: "+ standList.get(i).getCycleCount());
-
+        for (int i = 0; i < standList.size(); i++) {
+            System.out.println("Stand Info--- Id: " + standList.get(i).getId() + " Location: " + standList.get(i).getLocation() + " No. of cycles Available: " + standList.get(i).getCycleCount());
+        }
+    }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
         Reader.init(System.in);
