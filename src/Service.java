@@ -10,11 +10,12 @@ public class Service {
     private String maintenanceInformation; //Feedback information can be placed here
     private int ticket;
 
+    /* Administration function has been created in Service!*/
     public Service(int cycleID, String maintenanceInformation, int employeeID){
         this.cycleID = cycleID;
         this.maintenanceInformation = maintenanceInformation;
         this.employeeID = employeeID;
-        this.ticket = ticket;
+        this.ticket = 1; //Every time service is added, a ticket is opened!
     }
 
     public static void setDb(Database db) {
@@ -33,16 +34,20 @@ public class Service {
         this.maintenanceInformation = maintenanceInformation;
     }
 
-    public void setTicket(int ticket) {
-        this.ticket = ticket;
-    }
-
     public void addService() throws IOException, SQLException{
         System.out.println("Enter Cycle ID to which maintenance is associated");
         int inputCycleID = Reader.nextInt();
         System.out.println("Enter Maintenance Information regarding cycle :");
         String infoForRepair = Reader.nextLine();
-
-
+        System.out.println("Randomly alloting Employee for Job!");
+        int employRandom = db.getEmployeeID();
+        Service service  = new Service(inputCycleID,infoForRepair,employRandom);
+        db.addService(service);
     }
+
+    public void setUpdate() {
+        this.ticket = ticket;
+    }
+    public void
+
 }

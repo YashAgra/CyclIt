@@ -74,5 +74,26 @@ public class Database {
         query.close();
     }
     //==================================================================================================================
+    public int getEmployeeID()  throws SQLException { //To randomly get an employee ID
+        ResultSet resultSet; //initializing variable
+        Statement query = connection.createStatement();
+        resultSet = query.executeQuery("SELECT eid FROM employee ORDER BY RAND() LIMIT 1"); //take random employee from table
+        //note that the query has to be updated.
+        int id = 0;
+        while (resultSet.next()) {
+            id = resultSet.getInt("eid");
+        }
+        return id;
+    }
+
+    public void addService(Service service) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("INSERT INTO service(location, cycleCount) values(?,?)");
+//        query.setString(1, stand.getLocation());
+//        query.setInt(2, stand.getCycleCount());
+//        query.executeUpdate();
+//        query.close();
+    }
+
+
 
 }
