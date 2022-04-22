@@ -34,7 +34,7 @@ public class Service {
         this.maintenanceInformation = maintenanceInformation;
     }
 
-    public void addService() throws IOException, SQLException{
+    public static void addService() throws IOException, SQLException{
         System.out.println("Enter Cycle ID to which maintenance is associated");
         int inputCycleID = Reader.nextInt();
         System.out.println("Enter Maintenance Information regarding cycle :");
@@ -45,9 +45,18 @@ public class Service {
         db.addService(service);
     }
 
-    public void setUpdate() {
-        this.ticket = ticket;
+    public static void closeTicket() throws IOException, SQLException {
+        System.out.println("Enter service ID");
+        int sid = Reader.nextInt();
+        db.updateTicket(sid); //change instance to 0;
     }
-    public void
+
+    public static void updateMaintenanceInService() throws IOException, SQLException {
+        System.out.println("Enter service ID");
+        int sid = Reader.nextInt();
+        System.out.println("Input the new maintenance information");
+        int updatedInfo = Reader.nextInt();
+        db.updateMaintenance(sid);
+    }
 
 }
