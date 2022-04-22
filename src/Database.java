@@ -15,6 +15,8 @@ public class Database {
 
    //executeUpdate: create update, delete
 
+
+
     /*===============================STAND TABLE FUNCTIONS==========================================================*/
     public void addStand(Stand stand) throws SQLException {
         PreparedStatement query = connection.prepareStatement("INSERT INTO stand(location, cycleCount) values(?,?)");

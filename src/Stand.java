@@ -39,6 +39,7 @@ public class Stand {
         this.location = location;
         this.cycleCount = cycleCount;
     }
+
     static void addStand() throws IOException, SQLException {
         System.out.println("Enter Stand Location: ");
         String address = Reader.nextLine();
@@ -72,3 +73,4 @@ public class Stand {
         }
 
     }
+
