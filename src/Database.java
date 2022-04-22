@@ -15,6 +15,8 @@ public class Database {
 
    //executeUpdate: create update, delete
 
+
+
     /*===============================STAND TABLE FUNCTIONS==========================================================*/
     public void addStand(Stand stand) throws SQLException {
         PreparedStatement query = connection.prepareStatement("INSERT INTO stand(location, cycleCount) values(?,?)");
@@ -73,17 +75,4 @@ public class Database {
     }
     //==================================================================================================================
 
-    /*==============================================SERVICE TABLE FUNCTIONS==========================================*/
-
-    public int getEmployeeID()  throws SQLException{
-        ResultSet resultSet; //initializing variable
-        Statement query = connection.createStatement();
-        resultSet = query.executeQuery("SELECT employee_id FROM EMPLOYEE ORDER BY RAND() LIMIT 1"); //take random employee from table
-        //note that the query has to be updated.
-        int id;
-        while (resultSet.next()) {
-            id = resultSet.getInt('employee_id');
-        }
-        return id;
-    }
 }

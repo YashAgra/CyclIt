@@ -6,11 +6,15 @@ public class Service {
     static Database db = Cyclit.db;
     private int serviceID; //assigning a service ID
     private int employeeID; //Assign a Employee ID
+    private int cycleID;
     private String maintenanceInformation; //Feedback information can be placed here
     private int ticket;
 
-    public Service(){
-
+    public Service(int cycleID, String maintenanceInformation, int employeeID){
+        this.cycleID = cycleID;
+        this.maintenanceInformation = maintenanceInformation;
+        this.employeeID = employeeID;
+        this.ticket = ticket;
     }
 
     public static void setDb(Database db) {
@@ -34,9 +38,11 @@ public class Service {
     }
 
     public void addService() throws IOException, SQLException{
+        System.out.println("Enter Cycle ID to which maintenance is associated");
+        int inputCycleID = Reader.nextInt();
         System.out.println("Enter Maintenance Information regarding cycle :");
-        String maintenanceInfo = Reader.nextLine();
-        
+        String infoForRepair = Reader.nextLine();
+
 
     }
 }
