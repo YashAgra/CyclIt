@@ -4,30 +4,42 @@ import java.util.*;
 
 public class Service {
     static Database db = Cyclit.db; //Check if calling this is right
-    private int serviceID; //assigning a service ID
+
     private int employeeID; //Assign a Employee ID
     private int cycleID;
+
+    private int fid; //feedback ID
+
+    public int getFid() {
+        return fid;
+    }
+
+    public int getEmployeeID() {
+        return employeeID;
+    }
+
+    public int getCycleID() {
+        return cycleID;
+    }
+
+    public String getMaintenanceInformation() {
+        return maintenanceInformation;
+    }
+
+    public int getTicket() {
+        return ticket;
+    }
+
     private String maintenanceInformation; //Feedback information can be placed here
     private int ticket;
 
     /* Administration function has been created in Service!*/
-    public Service(int cycleID, String maintenanceInformation, int employeeID){
+    public Service(int cycleID, String maintenanceInformation, int employeeID,int fid){
         this.cycleID = cycleID;
         this.maintenanceInformation = maintenanceInformation;
         this.employeeID = employeeID;
         this.ticket = 1; //Every time service is added, a ticket is opened!
-    }
-
-    public void setServiceID(int serviceID) {
-        this.serviceID = serviceID;
-    }
-
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
-    }
-
-    public void setMaintenanceInformation(String maintenanceInformation) {
-        this.maintenanceInformation = maintenanceInformation;
+        this.fid = fid;
     }
 
     public static void addService() throws IOException, SQLException{
@@ -37,7 +49,9 @@ public class Service {
         String infoForRepair = Reader.nextLine();
         System.out.println("Randomly alloting Employee for Job!");
         int employRandom = db.getEmployeeID();
-        Service service  = new Service(inputCycleID,infoForRepair,employRandom);
+        System.out.println("Input Feedback ID of feedback to which service may be associated");
+        int feedback_id = Reader.nextInt();
+        Service service  = new Service(inputCycleID,infoForRepair,employRandom,feedback_id);
         db.addService(service);
     }
 
@@ -51,8 +65,8 @@ public class Service {
         System.out.println("Enter service ID");
         int sid = Reader.nextInt();
         System.out.println("Input the new maintenance information");
-        int updatedInfo = Reader.nextInt();
-        db.updateMaintenance(sid);
+        String updatedInfo = Reader.nextLine();
+        db.updateMaintenance(updatedInfo, sid);
     }
 
 }

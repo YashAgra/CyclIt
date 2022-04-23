@@ -339,22 +339,33 @@ public class Database {
         return id;
     }
 
-    public void addService(Service service) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO service(location, cycleCount) values(?,?)");
-//        query.setString(1, stand.getLocation());
-//        query.setInt(2, stand.getCycleCount());
-//        query.executeUpdate();
-//        query.close();
+    public void addService(Service service) throws SQLException { //Query Complete
+        PreparedStatement query = connection.prepareStatement("INSERT INTO service(int cycle_id, String maint_info, int eid, int ticketStatus,int fid) values(?,?,?,?,?)");
+        query.setInt(1,service.getCycleID());
+        query.setString(2,service.getMaintenanceInformation());
+        query.setInt(3,service.getEmployeeID());
+        query.setInt(4,service.getTicket());
+        query.setInt(5,service.getFid());
+
+        query.executeUpdate();
+        query.close();
     }
 
     public void updateTicket(int eid) throws SQLException {
-        ResultSet resultSet; //initializing variable
-        Statement query = connection.createStatement();
-        resultSet = query.executeQuery("SELECT sid FROM service WHERE eid = ?");
-        PreparedStatement query = connection.prepareStatement("INSERT INTO service(location, cycleCount) values(?,?)");
+        PreparedStatement query= connection.prepareStatement("UPDATE service SET ticket=? where eid=?");
+        query.setInt(1,0);
+        query.setInt(2,eid);
+
+        query.executeUpdate();
+        query.close();
     }
 
-    public void updateMaintenance(int eid) throws SQLException {
+    public void updateMaintenance(String updatedInfo, int sid) throws SQLException {
+        PreparedStatement query= connection.prepareStatement("UPDATE service SET maint_info=? where id=?");
+        query.setString(1,updatedInfo);
+        query.setInt(2,sid);
 
+        query.executeUpdate();
+        query.close();
     }
 }
