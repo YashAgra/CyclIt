@@ -3,7 +3,7 @@ import java.sql.*;
 import java.util.*;
 
 public class Service {
-    static Database db = Cyclit.db;
+    static Database db = Cyclit.db; //Check if calling this is right
     private int serviceID; //assigning a service ID
     private int employeeID; //Assign a Employee ID
     private int cycleID;
@@ -16,10 +16,6 @@ public class Service {
         this.maintenanceInformation = maintenanceInformation;
         this.employeeID = employeeID;
         this.ticket = 1; //Every time service is added, a ticket is opened!
-    }
-
-    public static void setDb(Database db) {
-        Service.db = db;
     }
 
     public void setServiceID(int serviceID) {

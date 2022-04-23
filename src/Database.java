@@ -354,8 +354,7 @@ public class Database {
         PreparedStatement query = connection.prepareStatement("INSERT INTO service(location, cycleCount) values(?,?)");
     }
 
-    public void updateMaintenance(int sid) throws SQLException {
+    public void updateMaintenance(int eid) throws SQLException {
 
     }
-
 }
