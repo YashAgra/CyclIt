@@ -118,14 +118,14 @@ public class Database {
     }
 
     public User getUser(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("SELECT * FROM User WHERE UserID = ?");
+        PreparedStatement query = connection.prepareStatement("SELECT * FROM User WHERE user_id = ?");
         query.setInt(1,id);
         ResultSet resultSet = query.executeQuery();
         User user = new User();
         while(resultSet.next()){
-            user.setUserID(resultSet.getInt("UserID"));
-            user.setPassword(resultSet.getString("Password"));
-            user.setPhoneNumber(resultSet.getString("PhoneNumber"));
+            user.setUserID(resultSet.getInt("user_id"));
+            user.setPassword(resultSet.getString("password"));
+            user.setPhoneNumber(resultSet.getString("phone"));
         }
         return user;
     }

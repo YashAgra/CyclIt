@@ -1,4 +1,7 @@
+import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class User {
@@ -143,7 +146,21 @@ public class User {
         }
         Cyclit.db.updateUser(user);
     }
-
+    static User getfromdb(String email, String pass) throws SQLException {
+        Database db = Cyclit.db;
+        PreparedStatement query = Database.connection.prepareStatement("SELECT user_id FROM user where email = ? and password = ?");
+        query.setString(1, email);
+        query.setString(2, pass);
+        ResultSet resultSet = query.executeQuery();
+        if(resultSet == null)
+            return null;
+        else{
+            resultSet.next();
+            int id = resultSet.getInt("user_id");
+            User user = User.getfromdb(id);
+            return user;
+        }
+    }
     static void deletefromdb(int id) throws SQLException {
         Cyclit.db.deleteUser(id);
     }
