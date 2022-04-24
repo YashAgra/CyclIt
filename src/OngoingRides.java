@@ -6,6 +6,10 @@ public class OngoingRides {
     private int standID;
     private String outTime;
 
+    public OngoingRides() {
+
+    }
+
     public int getUSerID() {
         return USerID;
     }
@@ -35,6 +39,13 @@ public class OngoingRides {
     }
 
     public void setOutTime(String outTime) {
+        this.outTime = outTime;
+    }
+
+    public OngoingRides(int USerID, int cycleID, int standID, String outTime) {
+        this.USerID = USerID;
+        CycleID = cycleID;
+        this.standID = standID;
         this.outTime = outTime;
     }
 
