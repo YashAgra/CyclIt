@@ -53,7 +53,7 @@ public class Cyclit {
     public static void login() throws IOException, SQLException {
         //enter user and pass
         System.out.println("Enter User ID: ");
-        String userid = Reader.nextLine();
+        String userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
         System.out.println("Enter Password: ");
         String pass = Reader.nextLine();
         User user =User.getfromdb(userid, pass);
@@ -87,8 +87,32 @@ public class Cyclit {
         //check the cred in database and login
     }
 
-    private static void displayMenu(User user) {
+    private static void displayMenu(User user) throws IOException, SQLException {
         System.out.println("display menu");
+        int displayid = Reader.nextInt();
+        switch(displayid){
+            case 1: feedback(user);
+            case 2: viewUserDetails(user);
+            case 3: triphistory(user);
+            case 4: wallet(user);
+            case -1: break;
+        }
+    }
+
+    private static void wallet(User user) {
+
+    }
+
+    private static void triphistory(User user) {
+
+    }
+
+    private static void viewUserDetails(User user) {
+
+    }
+
+    private static void feedback(User user) {
+
     }
 
     private static void bookCycle(User user) throws IOException {
@@ -116,17 +140,12 @@ public class Cyclit {
             }
         }
         /*
-        login page ask the user to lgin
+        login page ask the user to login
         2 option : login , register
 
-        login() functio
+        login() function
         register(){ addUser }
          */
-
-
-
-
-
 
     }
 
