@@ -24,32 +24,32 @@ public class Cyclit {
 
 
     //-------------------------Stands--------------------------------------------------------
-    public static void addStand() throws IOException, SQLException {
-        System.out.println("Enter Stand Location: ");
-        String address = Reader.nextLine();
-        System.out.println("Enter No of Cycles on the stand: ");
-        int cycles = Reader.nextInt();
-        Stand stand = new Stand(address,cycles);
-        db.addStand(stand);
-        //input number
-
-    }
-
-
-    private static void listStandById() throws IOException, SQLException {
-        System.out.println("enter stand id: ");
-        int id = Reader.nextInt();
-        Stand returnStand= db.getStandById(id);
-        System.out.println("Stand Info--- Id: "+ returnStand.getId()+ " Location: "+ returnStand.getLocation()+" No. of cycles Available: "+ returnStand.getCycleCount());
-
-    }
-
-    private static void listAllStand() throws SQLException {
-        ArrayList<Stand> standList = db.getAllStand();
-        for (int i = 0; i < standList.size(); i++) {
-            System.out.println("Stand Info--- Id: " + standList.get(i).getId() + " Location: " + standList.get(i).getLocation() + " No. of cycles Available: " + standList.get(i).getCycleCount());
-        }
-    }
+//    public static void addStand() throws IOException, SQLException {
+//        System.out.println("Enter Stand Location: ");
+//        String address = Reader.nextLine();
+//        System.out.println("Enter No of Cycles on the stand: ");
+//        int cycles = Reader.nextInt();
+//        Stand stand = new Stand(address,cycles);
+//        db.addStand(stand);
+//        //input number
+//
+//    }
+//
+//
+//    private static void listStandById() throws IOException, SQLException {
+//        System.out.println("enter stand id: ");
+//        int id = Reader.nextInt();
+//        Stand returnStand= db.getStandById(id);
+//        System.out.println("Stand Info--- Id: "+ returnStand.getId()+ " Location: "+ returnStand.getLocation()+" No. of cycles Available: "+ returnStand.getCycleCount());
+//
+//    }
+//
+//    private static void listAllStand() throws SQLException {
+//        ArrayList<Stand> standList = db.getAllStand();
+//        for (int i = 0; i < standList.size(); i++) {
+//            System.out.println("Stand Info--- Id: " + standList.get(i).getId() + " Location: " + standList.get(i).getLocation() + " No. of cycles Available: " + standList.get(i).getCycleCount());
+//        }
+//    }
     public static void login() throws IOException, SQLException {
         //enter user and pass
         System.out.println("Enter User ID: ");
@@ -104,7 +104,9 @@ public class Cyclit {
     }
 
     private static void triphistory(User user) {
-
+        System.out.println("================================================================");
+        System.out.println("| id |            Stand Location            | Available Cycles |");
+        System.out.println("================================================================");
     }
 
     private static void viewUserDetails(User user) {
