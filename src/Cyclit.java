@@ -106,7 +106,7 @@ public class Cyclit {
         System.out.println("===============================================================================================");
         System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
         System.out.println("===============================================================================================");
-        User.getfromdb(userid);
+        User.getfromdb(userid); //print initial user id
         User.updatedb(userid); //update user ID function
         System.out.println("===============================================================================================");
         System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
