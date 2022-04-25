@@ -110,9 +110,9 @@ public class Cyclit {
     }
 
     private static void viewUserDetails(User user) throws SQLException {
-        System.out.println("================================================================");
+        System.out.println("===============================================================================================");
         System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-        System.out.println("================================================================");
+        System.out.println("===============================================================================================");
         int i = user.getUserID();
         Cyclit.db.getUser(i);
     }
