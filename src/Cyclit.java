@@ -95,8 +95,23 @@ public class Cyclit {
             case 2: viewUserDetails(user);
             case 3: triphistory(user);
             case 4: wallet(user);
+            case 5: updateUserDetails(user);
             case -1: break;
         }
+    }
+
+    private static void updateUserDetails(User user) throws IOException, SQLException {
+        System.out.println("Update User Details, Please note the options here :");
+        int userid = Reader.nextInt();
+        System.out.println("===============================================================================================");
+        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
+        System.out.println("===============================================================================================");
+        User.getfromdb(userid);
+        User.updatedb(userid); //update user ID function
+        System.out.println("===============================================================================================");
+        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
+        System.out.println("===============================================================================================");
+        User.getfromdb(userid);
     }
 
     private static void wallet(User user) {
@@ -114,7 +129,7 @@ public class Cyclit {
         System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
         System.out.println("===============================================================================================");
         int i = user.getUserID();
-        Cyclit.db.getUser(i);
+        User.getfromdb(i);
     }
 
     private static void feedback(User user) {

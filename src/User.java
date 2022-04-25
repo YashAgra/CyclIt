@@ -115,7 +115,7 @@ public class User {
         return Cyclit.db.getUser(id);
     }
 
-    static void updatedb(int id) throws SQLException, IOException {
+    public static void updatedb(int id) throws SQLException, IOException {
         User user = getfromdb(id);
 
         int i;
