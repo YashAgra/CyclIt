@@ -101,7 +101,7 @@ public class User {
         System.out.println("Address : ");
         user.setAddress(Reader.nextLine());
 
-        System.out.println("ContactNumber : ");
+        System.out.println("Contact Number : ");
         user.setPhoneNumber(Reader.nextLine());
 
         System.out.println("Password : ");
@@ -115,7 +115,7 @@ public class User {
         return Cyclit.db.getUser(id);
     }
 
-    static void updatedb(int id) throws SQLException, IOException {
+    public static void updatedb(int id) throws SQLException, IOException {
         User user = getfromdb(id);
 
         int i;
