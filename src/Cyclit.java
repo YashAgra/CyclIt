@@ -99,6 +99,8 @@ public class Cyclit {
         }
     }
 
+
+
     private static void wallet(User user) {
 
     }
@@ -113,8 +115,8 @@ public class Cyclit {
 
     }
 
-    private static void feedback(User user) {
-
+    private static void feedback(User user) throws SQLException, IOException {
+        Feedback.addFeedBack(user.getUserID());
     }
 
     private static void bookCycle(User user) throws IOException {
@@ -161,37 +163,4 @@ public class Cyclit {
        // Cycle.UpdateCycleStandId();
     }
 }
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
 
-    static void init(InputStream input) {
-        reader = new BufferedReader(new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            //TODO add check for eof if necessary
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-    static String nextLine() throws IOException {
-        return reader.readLine();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static long nextLong() throws IOException {
-        return Long.parseLong( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-
-}
