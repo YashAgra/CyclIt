@@ -129,10 +129,14 @@ public class Cycle {
         Cyclit.db.deleteCycle(cid);
     }
 
+
     public static ArrayList<Cycle> getAllCycle() throws SQLException, ClassNotFoundException {
         return Cyclit.db.getAllCycle();
     }
 
+
+
+    //TODO LIST ALL CYCLES
 
 
 

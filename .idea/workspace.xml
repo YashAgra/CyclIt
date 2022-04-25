@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="5ede6fe3-b284-49d5-a7a1-cb826e4fff3f" name="Changes" comment="initial commit" />
+=======
+    <list default="true" id="5ede6fe3-b284-49d5-a7a1-cb826e4fff3f" name="Changes" comment="initial commit">
+      <change beforePath="$PROJECT_DIR$/src/Cycle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cycle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Feedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Feedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Payment_interface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Payment_interface.java" afterDir="false" />
+    </list>
+>>>>>>> 9faebbeda4b7f9b783b05ecaed061f9aec987cf7
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -111,7 +119,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
