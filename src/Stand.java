@@ -39,7 +39,6 @@ public class Stand {
         this.location = location;
         this.cycleCount = cycleCount;
     }
-
     static void addStand() throws IOException, SQLException {
         System.out.println("Enter Stand Location: ");
         String address = Reader.nextLine();
@@ -64,12 +63,12 @@ public class Stand {
         Stand stand = db.getStandById(this.id);
         stand.cycleCount = this.cycleCount;
         db.updateStandCycles(stand);
-    }
+        }
 
     static void deleteStand() throws SQLException, IOException {
         System.out.println("Enter Stand ID to delete: ");
         int id = Reader.nextInt();
         db.deleteStand(id);
-    }
+        }
 
-}
+    }

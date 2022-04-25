@@ -6,15 +6,19 @@ import java.util.ArrayList;
 public class Database {
     public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
     public static final String user = "root";
-    public static final String password = "12345678";
+    public static final String password = "ujjwal";
     public static Connection connection = null;
     Database() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(connection_url, user, password);
     }
 
-    //executeUpdate: create update, delete
-    public void addStand(Stand stand) throws SQLException {
+
+   //executeUpdate: create update, delete
+
+    public static void addStand(Stand stand) throws SQLException {
+    /*===============================STAND TABLE FUNCTIONS==========================================================*/
+
         PreparedStatement query = connection.prepareStatement("INSERT INTO stand(location, cycleCount) values(?,?)");
         query.setString(1, stand.getLocation());
         query.setInt(2, stand.getCycleCount());
@@ -49,127 +53,6 @@ public class Database {
         return stand;
     }
 
-    public Employee getEmployee(int id) throws SQLException, ClassNotFoundException {
-        PreparedStatement query = connection.prepareStatement("SELECT * FROM Employee WHERE EmployeeID = ?");
-        query.setInt(1,id);
-        ResultSet resultSet = query.executeQuery();
-        Employee employ = new Employee();
-        while(resultSet.next()){
-            employ.setEmployeeId(resultSet.getInt("EmployeeID"));
-            employ.setAddress(resultSet.getString("Address"));
-            employ.setEmailAddress(resultSet.getString("EmailAddress"));
-            employ.setPhoneNumber(resultSet.getString("PhoneNumber"));
-            employ.setType(resultSet.getString("Type"));
-            employ.setName(resultSet.getString("Name"));
-            employ.setSalary(resultSet.getInt("Salary"));
-        }
-        return employ;
-    }
-
-    public void addEmployee(Employee employee) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, EmailAddress, PhoneNumber, Type, Name, Salary) values(?,?,?,?,?,?)");
-        query.setString(1,employee.getAddress());
-        query.setString(2, employee.getEmailAddress());
-        query.setString(3, employee.getPhoneNumber());
-        query.setString(4, employee.getType());
-        query.setString(5, employee.getName());
-        query.setInt(6,employee.getSalary());
-        query.executeUpdate();
-        query.close();
-    }
-
-    public void deleteEmployee(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("DELETE FROM Employee where EmployeeID = ?");
-        query.setInt(1,id);
-        query.executeUpdate();
-        query.close();
-    }
-
-    public void updateEmployee(Employee employee) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("UPDATE Employee set Name = ?,PhoneNumber = ?,Address = ? where EmployeeID = ? ");
-        //query.setString(1,col);
-        query.setString(1,employee.getName());
-        query.setString(2,employee.getPhoneNumber());
-        query.setString(3,employee.getAddress());
-        query.setInt(4,employee.getEmployeeId());
-        query.executeUpdate();
-        query.close();
-    }
-
-    public void addUser(User user) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO User(Address, EmailAddress, PhoneNumber, Name,RollNumber,Password,Wallet,Year) values(?,?,?,?,?,?,?,?)");
-        query.setString(1,user.getAddress());
-        query.setString(2,user.getEmailID());
-        query.setString(3,user.getPhoneNumber());
-        query.setString(4, user.getName());
-        query.setInt(5, user.getRollNumber());
-        query.setString(6,user.getPassword());
-        query.setInt(7,user.getWallet());
-        query.setInt(8,user.getYear());
-        query.executeQuery();
-        query.close();
-    }
-
-    public void deleteUser(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("DELETE FROM User where UserID = ?");
-        query.setInt(1,id);
-        query.executeUpdate();
-        query.close();
-    }
-
-    public User getUser(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("SELECT * FROM User WHERE user_id = ?");
-        query.setInt(1,id);
-        ResultSet resultSet = query.executeQuery();
-        User user = new User();
-        while(resultSet.next()){
-            user.setUserID(resultSet.getInt("user_id"));
-            user.setPassword(resultSet.getString("password"));
-            user.setPhoneNumber(resultSet.getString("phone"));
-        }
-        return user;
-    }
-
-    public void updateUser(User user) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("UPDATE User set Name = ?,PhoneNumber = ?,Address = ?,Password = ? where UserID = ? ");
-        query.setString(1,user.getName());
-        query.setString(2,user.getPhoneNumber());
-        query.setString(3,user.getAddress());
-        query.setString(4,user.getPassword());
-        query.setInt(5,user.getUserID());
-        query.executeUpdate();
-        query.close();
-    }
-
-    public void addOngoingRides(OngoingRides ride) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("Insert Into OngoigRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
-        query.setInt(1,ride.getUSerID());
-        query.setInt(2,ride.getCycleID());
-        query.setInt(3,ride.getStandID());
-        query.setString(4,ride.getOutTime());
-        query.executeQuery();
-        query.close();
-
-    }
-
-    public void deleteOngoigRides(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("Delete from OngoigRides where UserID = ?");
-        query.setInt(1,id);
-        query.executeQuery();
-        query.close();
-    }
-
-    public OngoingRides getOngoigRides(int id) throws SQLException {
-        OngoingRides ride = new OngoingRides();
-        PreparedStatement query = connection.prepareStatement("Select * from OngoigRides where UserId = ?");
-        query.setInt(1,id);
-        ResultSet resultSet = query.executeQuery();
-        ride.setUSerID(resultSet.getInt("UserID"));
-        ride.setCycleID(resultSet.getInt("CycleID"));
-        ride.setStandID(resultSet.getInt("StandID"));
-        ride.setOutTime(resultSet.getString("OutTime"));
-        return ride;
-    }
     public void addCycle(Cycle cycle) throws SQLException{
         PreparedStatement query = connection.prepareStatement("INSERT INTO cycle( cycle_qr ,inUse ,stand_id, inRepair, model_no) values(?,?,?,?,?) ");
         query.setString(1,cycle.getCycle_qr());
@@ -327,45 +210,6 @@ public class Database {
         query.close();
     }
     //==================================================================================================================
-    public int getEmployeeID()  throws SQLException { //To randomly get an employee ID
-        ResultSet resultSet; //initializing variable
-        Statement query = connection.createStatement();
-        resultSet = query.executeQuery("SELECT eid FROM employee ORDER BY RAND() LIMIT 1"); //take random employee from table
-        //note that the query has to be updated.
-        int id = 0;
-        while (resultSet.next()) {
-            id = resultSet.getInt("eid");
-        }
-        return id;
-    }
 
-    public void addService(Service service) throws SQLException { //Query Complete
-        PreparedStatement query = connection.prepareStatement("INSERT INTO service(int cycle_id, String maint_info, int eid, int ticketStatus,int fid) values(?,?,?,?,?)");
-        query.setInt(1,service.getCycleID());
-        query.setString(2,service.getMaintenanceInformation());
-        query.setInt(3,service.getEmployeeID());
-        query.setInt(4,service.getTicket());
-        query.setInt(5,service.getFid());
 
-        query.executeUpdate();
-        query.close();
-    }
-
-    public void updateTicket(int eid) throws SQLException {
-        PreparedStatement query= connection.prepareStatement("UPDATE service SET ticket=? where eid=?");
-        query.setInt(1,0);
-        query.setInt(2,eid);
-
-        query.executeUpdate();
-        query.close();
-    }
-
-    public void updateMaintenance(String updatedInfo, int sid) throws SQLException {
-        PreparedStatement query= connection.prepareStatement("UPDATE service SET maint_info=? where id=?");
-        query.setString(1,updatedInfo);
-        query.setInt(2,sid);
-
-        query.executeUpdate();
-        query.close();
-    }
 }
