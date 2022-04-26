@@ -67,7 +67,7 @@ public class Database {
     }
 
     public void addEmployee(Employee employee) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, EmailAddress, PhoneNumber, Type, Name, Salary, Password) values(?,?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, email, phone, Type, Name, Salary) values(?,?,?,?,?,?)");
         query.setString(1,employee.getAddress());
         query.setString(2, employee.getEmailAddress());
         query.setString(3, employee.getPhoneNumber());
@@ -80,14 +80,14 @@ public class Database {
     }
 
     public void deleteEmployee(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("DELETE FROM Employee where EmployeeID = ?");
+        PreparedStatement query = connection.prepareStatement("DELETE FROM Employee where eid = ?");
         query.setInt(1,id);
         query.executeUpdate();
         query.close();
     }
 
     public void updateEmployee(Employee employee) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("UPDATE Employee set Name = ?,PhoneNumber = ?,Address = ? where EmployeeID = ? ");
+        PreparedStatement query = connection.prepareStatement("UPDATE Employee set Name = ?,phone = ?,Address = ? where eid = ? ");
         //query.setString(1,col);
         query.setString(1,employee.getName());
         query.setString(2,employee.getPhoneNumber());
@@ -98,7 +98,7 @@ public class Database {
     }
 
     public void addUser(User user) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO User(Address, Email, Phone, Name,Roll_no,Password,Wallet,Year) values(?,?,?,?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO User(Address, email, phone, Name,roll_no,Password,Wallet,Year) values(?,?,?,?,?,?,?,?)");
         query.setString(1,user.getAddress());
         query.setString(2,user.getEmailID());
         query.setString(3,user.getPhoneNumber());
@@ -112,7 +112,7 @@ public class Database {
     }
 
     public void deleteUser(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("DELETE FROM User where UserID = ?");
+        PreparedStatement query = connection.prepareStatement("DELETE FROM User where user_id = ?");
         query.setInt(1,id);
         query.executeUpdate();
         query.close();
@@ -127,12 +127,18 @@ public class Database {
             user.setUserID(resultSet.getInt("user_id"));
             user.setPassword(resultSet.getString("password"));
             user.setPhoneNumber(resultSet.getString("phone"));
+            user.setWallet(resultSet.getInt("wallet"));
+            user.setRollNumber(resultSet.getInt("roll_no"));
+            user.setEmailID(resultSet.getString("email"));
+            user.setYear(resultSet.getInt("year"));
+            user.setAddress(resultSet.getString("address"));
+            user.setName(resultSet.getString("name"));
         }
         return user;
     }
 
     public void updateUser(User user) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("UPDATE User set Name = ?,PhoneNumber = ?,Address = ?,Password = ? where UserID = ? ");
+        PreparedStatement query = connection.prepareStatement("UPDATE User set Name = ?,phone = ?,Address = ?,Password = ? where user_id = ? ");
         query.setString(1,user.getName());
         query.setString(2,user.getPhoneNumber());
         query.setString(3,user.getAddress());
@@ -142,8 +148,16 @@ public class Database {
         query.close();
     }
 
+    public void updateWalletMoney(User user) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("UPDATE User set Wallet = ? where user_id = ? ");
+        query.setInt(1,user.getWallet());
+        query.setInt(2,user.getUserID());
+        query.executeUpdate();
+        query.close();
+    }
+
     public void addOngoingRides(OngoingRides ride) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("Insert Into OngoingRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("Insert Into OngoigRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
         query.setInt(1,ride.getUSerID());
         query.setInt(2,ride.getCycleID());
         query.setInt(3,ride.getStandID());
@@ -252,6 +266,8 @@ public class Database {
 
         return returnList;
     }
+
+    //Get all cycles on a stand
     public static ArrayList<Cycle> getAllCycle(int sid) throws SQLException, ClassNotFoundException {
         PreparedStatement query = connection.prepareStatement("SELECT * FROM CYCLE WHERE stand_id = ?");
         query.setInt(1,sid);

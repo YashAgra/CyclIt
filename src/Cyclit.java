@@ -135,17 +135,12 @@ public class Cyclit {
             }
         }
         /*
-        login page ask the user to lgin
+        login page ask the user to login
         2 option : login , register
 
-        login() functio
+        login() function
         register(){ addUser }
          */
-
-
-
-
-
 
     }
 
