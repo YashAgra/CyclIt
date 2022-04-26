@@ -26,6 +26,7 @@ public class Cyclit {
     public static void login() throws IOException, SQLException, ClassNotFoundException {
 
         //enter user and pass
+
         System.out.println("Enter User ID: ");
         String userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
         System.out.println("Enter Password: ");
@@ -204,14 +205,44 @@ public class Cyclit {
         User.getfromdb(userid);
     }
 
-    private static void wallet(User user) {
+    private static void wallet(User user) throws IOException, SQLException {
+        int input;
+        while(true){
+            System.out.println("================================================================");
+            System.out.println("Current Amount : " + user.getWallet());
+            System.out.println("1. Add Money");
+            System.out.println("2. exit");
+            input = Reader.nextInt();
+            if(input == 1){
+                System.out.println("==============================================================");
+                System.out.println("Enter Amount: ");
+                int amount = Reader.nextInt();
+                Payment_interface.addPayInterface(user.getUserID(),amount,true);
+                System.out.println("Confirm Amount (Y/N) : ");
+                String con = Reader.nextLine();
+                if(con.equals("Y") || con.equals("y")){
+                    Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
+                    //Payment_interface.deletePayInterface_byUserId(user.getUserID());
+                    user.setWallet(user.getWallet()+amount);
+                    User.updatewalletMoney(user);
+                    user = User.getfromdb(user.getUserID());
+                }
+                else {
+                    System.out.println("Invalid Input (Try Again)");
+                    continue;
+                }
 
+            } else if (input == 2) {
+                break;
+            }
+        }
     }
 
     private static void triphistory(User user) {
-        System.out.println("================================================================");
-        System.out.println("| id |            Stand Location            | Available Cycles |");
-        System.out.println("================================================================");
+        System.out.println("=========================================================================================================");
+        System.out.println("| cyclid |  |source_stand|  |dest_stand|  |   startTime  |  |  endTime  |  |     Date     |  |PaymentID| ");
+        System.out.println("=========================================================================================================");
+
     }
 
     private static void viewUserDetails(User user) throws SQLException {
@@ -244,8 +275,8 @@ public class Cyclit {
             System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
             int i = Reader.nextInt();
             switch(i){
-                case 1: login(); System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
-                case 2: register(); System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
+                case 1: login();
+                case 2: register();
                 case 3: break;
                 //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
             }
