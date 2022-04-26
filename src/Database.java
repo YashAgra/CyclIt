@@ -48,15 +48,15 @@ public class Database {
     }
 
     public Employee getEmployee(int id) throws SQLException, ClassNotFoundException {
-        PreparedStatement query = connection.prepareStatement("SELECT * FROM Employee WHERE EmployeeID = ?");
+        PreparedStatement query = connection.prepareStatement("SELECT * FROM Employee WHERE eid = ?");
         query.setInt(1,id);
         ResultSet resultSet = query.executeQuery();
         Employee employ = new Employee();
         while(resultSet.next()){
-            employ.setEmployeeId(resultSet.getInt("EmployeeID"));
+            employ.setEmployeeId(resultSet.getInt("eid"));
             employ.setAddress(resultSet.getString("Address"));
-            employ.setEmailAddress(resultSet.getString("EmailAddress"));
-            employ.setPhoneNumber(resultSet.getString("PhoneNumber"));
+            employ.setEmailAddress(resultSet.getString("email"));
+            employ.setPhoneNumber(resultSet.getString("phone"));
             employ.setType(resultSet.getString("Type"));
             employ.setName(resultSet.getString("Name"));
             employ.setSalary(resultSet.getInt("Salary"));

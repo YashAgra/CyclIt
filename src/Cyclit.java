@@ -27,11 +27,12 @@ public class Cyclit {
     public static void login() throws IOException, SQLException, ClassNotFoundException {
 
         //enter user and pass
+
         String userid;
         boolean isEmployee;
         String pass;
         while(true) {
-            System.out.println("Enter User ID: ");
+            System.out.println("Enter Email ID: ");
             userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
             System.out.println("Enter Password: ");
             pass = Reader.nextLine();
@@ -176,7 +177,7 @@ public class Cyclit {
     }
 
     private static void displayMenu(User user) throws IOException, SQLException {
-        System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n 5. Update your details\n else enter -1 to leave \n");
+        System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n else enter -1 to leave \n");
         System.out.println();
         while (true) {
             int displayid = Reader.nextInt();
@@ -190,8 +191,6 @@ public class Cyclit {
                     triphistory(user);
                 case 4:
                     wallet(user);
-                case 5:
-                    updateUserDetails(user);
                 case -1:
                     flag = 1;
                     break;
@@ -262,18 +261,28 @@ public class Cyclit {
     }
 
     private static void triphistory(User user) {
-        System.out.println("=========================================================================================================");
-        System.out.println("| cyclid |  |source_stand|  |dest_stand|  |   startTime  |  |  endTime  |  |     Date     |  |PaymentID| ");
-        System.out.println("=========================================================================================================");
 
     }
 
-    private static void viewUserDetails(User user) throws SQLException {
-        System.out.println("===============================================================================================");
-        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-        System.out.println("===============================================================================================");
+    private static void viewUserDetails(User user) throws SQLException, IOException {
         int i = user.getUserID();
-        User.getfromdb(i);
+        System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
+        int viewUserDetailMenu = Reader.nextInt();
+        int flag = 0;
+        while (true) {
+            switch (viewUserDetailMenu) {
+                case 1:
+                    User.getfromdb(i);
+                    break;
+                case 2:
+                    updateUserDetails(user);
+                    break;
+                case -1:
+                    flag = 1;
+                    break;
+            }
+            if (flag == 1) break;
+        }
     }
 
     private static void feedback(User user) throws SQLException, IOException {
@@ -310,6 +319,9 @@ public class Cyclit {
         while(true){
             System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
             int i = Reader.nextInt();
+
+                //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
+
             if(i==1){
                 login();
             } else if (i==2) {
