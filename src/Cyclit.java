@@ -244,15 +244,20 @@ public class Cyclit {
         int i = user.getUserID();
         System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
         int viewUserDetailMenu = Reader.nextInt();
+        int flag = 0;
         while (true) {
             switch (viewUserDetailMenu) {
                 case 1:
                     User.getfromdb(i);
+                    break;
                 case 2:
                     updateUserDetails(user);
+                    break;
                 case -1:
+                    flag = 1;
                     break;
             }
+            if (flag == 1) break;
         }
     }
 
