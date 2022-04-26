@@ -22,55 +22,121 @@ public class Cyclit {
 
 
 
-
-    //-------------------------Stands--------------------------------------------------------
-//    public static void addStand() throws IOException, SQLException {
-//        System.out.println("Enter Stand Location: ");
-//        String address = Reader.nextLine();
-//        System.out.println("Enter No of Cycles on the stand: ");
-//        int cycles = Reader.nextInt();
-//        Stand stand = new Stand(address,cycles);
-//        db.addStand(stand);
-//        //input number
-//
-//    }
-//
-//
-//    private static void listStandById() throws IOException, SQLException {
-//        System.out.println("enter stand id: ");
-//        int id = Reader.nextInt();
-//        Stand returnStand= db.getStandById(id);
-//        System.out.println("Stand Info--- Id: "+ returnStand.getId()+ " Location: "+ returnStand.getLocation()+" No. of cycles Available: "+ returnStand.getCycleCount());
-//
-//    }
-//
-//    private static void listAllStand() throws SQLException {
-//        ArrayList<Stand> standList = db.getAllStand();
-//        for (int i = 0; i < standList.size(); i++) {
-//            System.out.println("Stand Info--- Id: " + standList.get(i).getId() + " Location: " + standList.get(i).getLocation() + " No. of cycles Available: " + standList.get(i).getCycleCount());
-//        }
-//    }
-    public static void login() throws IOException, SQLException {
+    public static void login() throws IOException, SQLException, ClassNotFoundException {
         //enter user and pass
         System.out.println("Enter User ID: ");
         String userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
         System.out.println("Enter Password: ");
         String pass = Reader.nextLine();
+
+        int index=-1;
+        for(int i=0;i<userid.length();i++){
+            if(userid.charAt(i)=='@') index=i;
+        }
+        if(index==-1) System.out.println("Invalid Email id");  //TODO TRACE BACK TO LOGIN PAGE
+        boolean isEmployee=false;
+        String sub_email=userid.substring(index,userid.length());
+        if(sub_email.equals("@cyclit.in")) {
+            isEmployee=true;
+        }
+
+        if(isEmployee){
+            its_a_employee(userid,pass);
+        }
+
+        its_a_user(userid,pass);
+        //check the cred in database and login
+    }
+
+    private static void its_a_employee(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
+        Employee emp=Employee.getfromdb(userid,pass);
+        if(emp==null){
+            System.out.println("--------Wrong details try again------------\n");
+        }
+        int emp_id=emp.getEmployeeId();
+        String type=emp.getType();
+        if(type=="HR"){
+            is_HR(emp);
+        }
+        else if(type=="CycleManager"){
+            is_cycleManager(emp);
+        }
+        else if(type=="Service"){
+            is_serviceMan(emp);
+        }
+        else if(type=="PR"){
+            is_PRman(emp);
+        }
+    }
+
+    private static void is_HR(Employee emp) throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee");
+        int whatToDo=Reader.nextInt();
+        if(whatToDo==1){
+            Employee.addtodb();
+        }else if(whatToDo==2){
+            Employee.updatedb();
+        }
+        else if(whatToDo==3){
+            Employee.deletefromdb();
+        }
+    }
+
+    private static void is_cycleManager(Employee emp) throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Servies");
+        int whatToDo=Reader.nextInt();
+        switch(whatToDo){
+            case 1: Service.closeTicket();
+            case 2: Stand.deleteStand();
+            case 3: Stand.addStand();
+            case 4: Cycle.addCycle();
+            case 5: Cycle.deleteCyclefromdb();
+            case 6: Cycle.listAllCycle();
+            case 7: Stand.listAll();
+            case 8: getAllService();
+        }
+    }
+
+    private static void is_PRman(Employee emp) throws IOException, SQLException {
+        System.out.println("1. Get Employee Details \n2. Get User Details\n");
+        int whatToDo=Reader.nextInt();
+        switch(whatToDo){
+            case 1: db.getEmployeeDetials_publicInfo();
+            case 2: db.getUserDetails_publicInfo();
+        }
+    }
+
+    private static void is_serviceMan(Employee emp) throws IOException, SQLException {
+        System.out.println("1. Get all services \n2. CLose service \n -1.exit");
+        int whatToDo=Reader.nextInt();
+        if(whatToDo==1){
+            getAllService();
+        }
+        else if(whatToDo==2){
+            Service.closeTicket();
+
+        }
+        else{
+            //nothing;
+        }
+    }
+
+    private static void its_a_user(String userid,String pass) throws SQLException, IOException {
         User user =User.getfromdb(userid, pass);
-        if(user!=null){
-            System.out.println("Welcome "+ user.getName()+"\n");
+        if(user!=null) {
+            System.out.println("Welcome " + user.getName() + "\n");
             System.out.println("================================================================");
             System.out.println("| id |            Stand Location            | Available Cycles |");
             System.out.println("================================================================");
             ArrayList<Stand> standList = db.getAllStand();
-            for(int i = 0 ; i < standList.size() ; i++) {
+            for (int i = 0; i < standList.size(); i++) {
                 Stand stand = standList.get(i);
                 System.out.print("  ");
                 System.out.print(stand.getId());
                 System.out.print("    |");
                 System.out.print(stand.getLocation());
                 int z = stand.getLocation().length();
-                System.out.print(" ".repeat(41-z)+"|");
+                System.out.print(" ".repeat(41 - z) + "|");
                 System.out.println(stand.getCycleCount());
 
                 //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
@@ -78,13 +144,15 @@ public class Cyclit {
             System.out.println("===================================================");
             System.out.println("1. Book a bike \n2. Check menu options");
             int id = Reader.nextInt();
-            switch(id){
-                case 1: bookCycle(user);
-                case 2: displayMenu(user);
-                case -1: break;
+            switch (id) {
+                case 1:
+                    bookCycle(user);
+                case 2:
+                    displayMenu(user);
+                case -1:
+                    break;
             }
         }
-        //check the cred in database and login
     }
 
     private static void displayMenu(User user) throws IOException, SQLException {
@@ -99,7 +167,16 @@ public class Cyclit {
         }
     }
 
+    private static void getAllService() throws SQLException {
+        ArrayList<Service> services=Service.getAll_Active_Services();
+        System.out.println("=======================================Pending Services=====================================\n");
+        System.out.println("Service_id     Cycle_id        Emp_id          fid            maintenanceInformation");
 
+        for(int i=0;i< services.size();i++){
+            Service service= services.get(i);
+            System.out.println(service.getService_id()+"    "+service.getCycleID()+"     "+service.getEmployeeID()+"      "+service.getFid()+"        "+service.getMaintenanceInformation());
+        }
+    }
 
     private static void wallet(User user) {
 

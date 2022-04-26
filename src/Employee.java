@@ -1,6 +1,8 @@
 import javax.print.DocFlavor;
 import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Employee {
@@ -74,7 +76,7 @@ public class Employee {
         Address = address;
     }
 
-    static void addtodb() throws IOException, SQLException, ClassNotFoundException {
+    public static void addtodb() throws IOException, SQLException, ClassNotFoundException {
         Employee employee = new Employee();
 
         System.out.println("Name : ");
@@ -93,19 +95,22 @@ public class Employee {
         employee.setType(Reader.next());
         System.out.println("Salary: ");
         employee.setSalary(Reader.nextInt());
-
         Cyclit.db.addEmployee(employee);
     }
 
-    static Employee getfromdb(int id) throws SQLException, ClassNotFoundException {
+    public static Employee getfromdb(int id) throws SQLException, ClassNotFoundException {
         return Cyclit.db.getEmployee(id);
     }
 
-    static void deletefromdb(int id) throws SQLException {
+    public static void deletefromdb() throws SQLException, IOException {
+        System.out.println("Employee you want to remove:");
+        int id=Reader.nextInt();
         Cyclit.db.deleteEmployee(id);
     }
 
-    static void updatedb(int id) throws IOException, SQLException, ClassNotFoundException {
+    public static void updatedb() throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("Enter the employee id to update: ");
+        int id = Reader.nextInt();
         Employee employee = getfromdb(id);
 
         int i;
@@ -132,5 +137,21 @@ public class Employee {
             }
         }
         Cyclit.db.updateEmployee(employee);
+    }
+
+    public static Employee getfromdb(String email, String pass) throws SQLException, ClassNotFoundException {
+        Database db = Cyclit.db;
+        PreparedStatement query = Database.connection.prepareStatement("SELECT user_id FROM employee where email = ? and password = ?");
+        query.setString(1, email);
+        query.setString(2, pass);
+        ResultSet resultSet = query.executeQuery();
+        if(resultSet == null)
+            return null;
+        else{
+            resultSet.next();
+            int id = resultSet.getInt("eid");
+            Employee emp = Employee.getfromdb(id);
+            return emp;
+        }
     }
 }
