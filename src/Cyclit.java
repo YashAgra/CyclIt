@@ -84,7 +84,7 @@ public class Cyclit {
     }
 
     private static void is_HR(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee");
+        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee \n 4. Find Employees who are customers also 5. Average Salary of each departement by types \n" );
         int whatToDo=Reader.nextInt();
         if(whatToDo==1){
             Employee.addtodb();
@@ -94,6 +94,14 @@ public class Cyclit {
         else if(whatToDo==3){
             Employee.deletefromdb();
         }
+        else if(whatToDo==4){
+            Cyclit.db.employeeNaturalJoinCustomer();
+        }
+
+        else if(whatToDo==5){
+            Cyclit.db.averageSalaryofEmployeeTypes();
+        }
+
     }
 
     private static void is_cycleManager(Employee emp) throws IOException, SQLException, ClassNotFoundException {
@@ -112,11 +120,13 @@ public class Cyclit {
     }
 
     private static void is_PRman(Employee emp) throws IOException, SQLException {
-        System.out.println("1. Get Employee Details \n2. Get User Details\n");
+        System.out.println("1. Get Employee Details \n2. Get User Details\n 3. Complete list details");
         int whatToDo=Reader.nextInt();
         switch(whatToDo){
             case 1: db.getEmployeeDetials_publicInfo();
             case 2: db.getUserDetails_publicInfo();
+            case 3: db.completeUserData();
+            case 4: db.averageSpendGreaterThan500();
         }
     }
 
@@ -290,19 +300,20 @@ public class Cyclit {
     }
 
     private static void bookCycle(User user) throws IOException, SQLException {
-        ArrayList<Stand> standList = db.getAllStand();
-        for (int i = 0; i < standList.size(); i++) {
-            Stand stand = standList.get(i);
-            System.out.print("  ");
-            System.out.print(stand.getId());
-            System.out.print("    |");
-            System.out.print(stand.getLocation());
-            int z = stand.getLocation().length();
-            System.out.print(" ".repeat(41 - z) + "|");
-            System.out.println(stand.getCycleCount());
-
-            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
-        }
+        Stand.listAll();
+//        ArrayList<Stand> standList = db.getAllStand();
+//        for (int i = 0; i < standList.size(); i++) {
+//            Stand stand = standList.get(i);
+//            System.out.print("  ");
+//            System.out.print(stand.getId());
+//            System.out.print("    |");
+//            System.out.print(stand.getLocation());
+//            int z = stand.getLocation().length();
+//            System.out.print(" ".repeat(41 - z) + "|");
+//            System.out.println(stand.getCycleCount());
+//
+//            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
+//        }
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();

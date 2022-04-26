@@ -463,4 +463,55 @@ public class Database {
     }
 
 
+    //10 Queries start from Here !
+
+    //<Start with HR>
+    public void employeeNaturalJoinCustomer() throws SQLException {
+        /* List all the employees who uses our app as a customer */
+
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+        System.out.println("Greetings HR! This is the list of all employees who use our application as a customer : ");
+        /*select user.name, user.phone , user.email, user.address from user
+        inner join employee on employee.eid = user.user_id; */
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+
+    }
+
+    public void averageSalaryofEmployeeTypes() throws SQLException {
+        System.out.println("Greetings HR! This is the average value Salary according to HR department, PR department, Service Department and Cycle Manager Department !");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery("SELECT type, AVG(salary) AS val_1 FROM employee GROUP BY type;"); // TODO add sql
+
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+
+    }
+
+    //<HR queries end>
+
+
+    //<PR Team queries begin>
+    public void completeUserData () throws SQLException {
+        //find all the users of the app (employee union user)
+        Statement query = connection.createStatement();
+        System.out.println("Greetings PR! This is the list of all the users : This list is for both employee and users, and does not have any duplicates");
+        ResultSet resultSet = query.executeQuery("SELECT name, address, email, phone FROM user UNION select name, address,email, phone from employee;"); // TODO add sql
+
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+
+    }
+        //System.out.println("Greetings PR!");
+
+    public void averageSpendGreaterThan500() throws SQLException {
+        //List of users with Average spend greater than 500
+        System.out.println("Greetings PR! This is the list of cycle users which have spend them more than 500. You have the authority to reward them now!");
+
+
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+
+    }
+
 }
