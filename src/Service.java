@@ -5,13 +5,45 @@ import java.util.*;
 public class Service {
     static Database db = Cyclit.db; //Check if calling this is right
 
-    private int employeeID; //Assign a Employee ID
+    private int service_id;
     private int cycleID;
-
+    private int employeeID; //Assign a Employee ID
     private int fid; //feedback ID
+    private String maintenanceInformation; //Feedback information can be placed here
+    private boolean ticket;
 
+    public int getService_id(){
+        return service_id;
+    }
+    public void setServiceId(int service_id){
+        this.service_id=service_id;
+    }
     public int getFid() {
         return fid;
+    }
+
+    public static void setDb(Database db) {
+        Service.db = db;
+    }
+
+    public void setEmployeeID(int employeeID) {
+        this.employeeID = employeeID;
+    }
+
+    public void setCycleID(int cycleID) {
+        this.cycleID = cycleID;
+    }
+
+    public void setFid(int fid) {
+        this.fid = fid;
+    }
+
+    public void setMaintenanceInformation(String maintenanceInformation) {
+        this.maintenanceInformation = maintenanceInformation;
+    }
+
+    public void setTicket(boolean ticket) {
+        this.ticket = ticket;
     }
 
     public int getEmployeeID() {
@@ -26,19 +58,17 @@ public class Service {
         return maintenanceInformation;
     }
 
-    public int getTicket() {
+    public boolean getTicket() {
         return ticket;
     }
 
-    private String maintenanceInformation; //Feedback information can be placed here
-    private int ticket;
-
+    public Service(){}
     /* Administration function has been created in Service!*/
-    public Service(int cycleID, String maintenanceInformation, int employeeID,int fid){
+    public Service(int cycleID, String maintenanceInformation, int employeeID, int fid){
         this.cycleID = cycleID;
         this.maintenanceInformation = maintenanceInformation;
         this.employeeID = employeeID;
-        this.ticket = 1; //Every time service is added, a ticket is opened!
+        this.ticket = true; //Every time service is added, a ticket is opened!
         this.fid = fid;
     }
 
@@ -56,9 +86,9 @@ public class Service {
     }
 
     public static void closeTicket() throws IOException, SQLException {
-        System.out.println("Enter service ID");
+        System.out.println("Enter service ID you want to close:");
         int sid = Reader.nextInt();
-        db.updateTicket(sid); //change instance to 0;
+        db.closeTicket(sid); //change instance to 0;
     }
 
     public static void updateMaintenanceInService() throws IOException, SQLException {
@@ -68,5 +98,11 @@ public class Service {
         String updatedInfo = Reader.nextLine();
         db.updateMaintenance(updatedInfo, sid);
     }
+
+    public static ArrayList<Service> getAll_Active_Services() throws SQLException {
+        ArrayList<Service> services = db.getAll_Active_Services();
+        return services;
+    }
+
 
 }
