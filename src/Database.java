@@ -558,4 +558,5 @@ public class Database {
 
     // TODO 1 query left that will be inputed in user trip history function. Number of queries left to write = 3
 
+    //Changes made
 }
