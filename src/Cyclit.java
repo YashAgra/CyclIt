@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -128,22 +129,22 @@ public class Cyclit {
         User user =User.getfromdb(userid, pass);
         if(user!=null) {
             System.out.println("Welcome " + user.getName() + "\n");
-            System.out.println("================================================================");
-            System.out.println("| id |            Stand Location            | Available Cycles |");
-            System.out.println("================================================================");
-            ArrayList<Stand> standList = db.getAllStand();
-            for (int i = 0; i < standList.size(); i++) {
-                Stand stand = standList.get(i);
-                System.out.print("  ");
-                System.out.print(stand.getId());
-                System.out.print("    |");
-                System.out.print(stand.getLocation());
-                int z = stand.getLocation().length();
-                System.out.print(" ".repeat(41 - z) + "|");
-                System.out.println(stand.getCycleCount());
-
-                //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
-            }
+//            System.out.println("================================================================");
+//            System.out.println("| id |            Stand Location            | Available Cycles |");
+//            System.out.println("================================================================");
+            Stand.listAll();
+//            for (int i = 0; i < standList.size(); i++) {
+//                Stand stand = standList.get(i);
+//                System.out.print("  ");
+//                System.out.print(stand.getId());
+//                System.out.print("    |");
+//                System.out.print(stand.getLocation());
+//                int z = stand.getLocation().length();
+//                System.out.print(" ".repeat(41 - z) + "|");
+//                System.out.println(stand.getCycleCount());
+//
+//                //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
+//            }
             System.out.println("===================================================");
             System.out.println("1. Book a bike \n2. Check menu options");
             int id = Reader.nextInt();
@@ -181,28 +182,31 @@ public class Cyclit {
     }
 
     private static void getAllService() throws SQLException {
-        ArrayList<Service> services=Service.getAll_Active_Services();
+        ResultSet services=Service.getAll_Active_Services();
         System.out.println("=======================================Pending Services=====================================\n");
-        System.out.println("Service_id     Cycle_id        Emp_id          fid            maintenanceInformation");
-
-        for(int i=0;i< services.size();i++){
-            Service service= services.get(i);
-            System.out.println(service.getService_id()+"    "+service.getCycleID()+"     "+service.getEmployeeID()+"      "+service.getFid()+"        "+service.getMaintenanceInformation());
-        }
+        net.efabrika.util.DBTablePrinter.printResultSet(services);
+//        System.out.println("Service_id     Cycle_id        Emp_id          fid            maintenanceInformation");
+//
+//        for(int i=0;i< services.size();i++){
+//            Service service= services.get(i);
+//            System.out.println(service.getService_id()+"    "+service.getCycleID()+"     "+service.getEmployeeID()+"      "+service.getFid()+"        "+service.getMaintenanceInformation());
+//        }
 }
 
     private static void updateUserDetails(User user) throws IOException, SQLException {
-        System.out.println("Update User Details, Please note the options here :");
-        int userid = Reader.nextInt();
-        System.out.println("===============================================================================================");
-        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-        System.out.println("===============================================================================================");
-        User.getfromdb(userid); //print initial user id
+//        System.out.println("Update User Details, Please note the options here :");
+        int userid = user.getUserID();
+
+//        System.out.println("===============================================================================================");
+//        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
+//        System.out.println("===============================================================================================");
+        user.viewUser();
         User.updatedb(userid); //update user ID function
-        System.out.println("===============================================================================================");
-        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-        System.out.println("===============================================================================================");
-        User.getfromdb(userid);
+//        System.out.println("===============================================================================================");
+//        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
+//        System.out.println("===============================================================================================");
+        System.out.println("Updated Details are: ");
+        User.getfromdb(userid).viewUser();
     }
 
     private static void wallet(User user) throws IOException, SQLException {

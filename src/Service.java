@@ -99,8 +99,8 @@ public class Service {
         db.updateMaintenance(updatedInfo, sid);
     }
 
-    public static ArrayList<Service> getAll_Active_Services() throws SQLException {
-        ArrayList<Service> services = db.getAll_Active_Services();
+    public static ResultSet getAll_Active_Services() throws SQLException {
+       ResultSet services = db.getAll_Active_Services();
         return services;
     }
 
