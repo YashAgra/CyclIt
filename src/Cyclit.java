@@ -238,13 +238,11 @@ public class Cyclit {
 
     private static void triphistory(User user) {
 
-
     }
 
     private static void viewUserDetails(User user) throws SQLException, IOException {
-
         int i = user.getUserID();
-        System.out.println("1. View User details \n 2. Update user details");
+        System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
         int viewUserDetailMenu = Reader.nextInt();
         while (true) {
             switch (viewUserDetailMenu) {
