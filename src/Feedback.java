@@ -41,6 +41,7 @@ public class Feedback {
         System.out.println("Enter FeedBack:");
         String feedback=Reader.nextLine();
         feed.feedback=feedback;
+        System.out.println("Thank you for your feedback! We will communicate with you and make the necessary improvements");
 
         Cyclit.db.addFeedBack(feed);
     }
