@@ -128,9 +128,6 @@ public class Cyclit {
         User user =User.getfromdb(userid, pass);
         if(user!=null) {
             System.out.println("Welcome " + user.getName() + "\n");
-            System.out.println("================================================================");
-            System.out.println("| id |            Stand Location            | Available Cycles |");
-            System.out.println("================================================================");
             ArrayList<Stand> standList = db.getAllStand();
             for (int i = 0; i < standList.size(); i++) {
                 Stand stand = standList.get(i);
