@@ -67,13 +67,14 @@ public class Database {
     }
 
     public void addEmployee(Employee employee) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, EmailAddress, PhoneNumber, Type, Name, Salary) values(?,?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, EmailAddress, PhoneNumber, Type, Name, Salary, Password) values(?,?,?,?,?,?)");
         query.setString(1,employee.getAddress());
         query.setString(2, employee.getEmailAddress());
         query.setString(3, employee.getPhoneNumber());
         query.setString(4, employee.getType());
         query.setString(5, employee.getName());
         query.setInt(6,employee.getSalary());
+        query.setString(7, employee.getPassword());
         query.executeUpdate();
         query.close();
     }
@@ -97,7 +98,7 @@ public class Database {
     }
 
     public void addUser(User user) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO User(Address, EmailAddress, PhoneNumber, Name,RollNumber,Password,Wallet,Year) values(?,?,?,?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO User(Address, Email, Phone, Name,Roll_no,Password,Wallet,Year) values(?,?,?,?,?,?,?,?)");
         query.setString(1,user.getAddress());
         query.setString(2,user.getEmailID());
         query.setString(3,user.getPhoneNumber());
@@ -106,7 +107,7 @@ public class Database {
         query.setString(6,user.getPassword());
         query.setInt(7,user.getWallet());
         query.setInt(8,user.getYear());
-        query.executeQuery();
+        query.executeUpdate();
         query.close();
     }
 
@@ -142,12 +143,12 @@ public class Database {
     }
 
     public void addOngoingRides(OngoingRides ride) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("Insert Into OngoigRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("Insert Into OngoingRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
         query.setInt(1,ride.getUSerID());
         query.setInt(2,ride.getCycleID());
         query.setInt(3,ride.getStandID());
         query.setString(4,ride.getOutTime());
-        query.executeQuery();
+        query.executeUpdate();
         query.close();
 
     }
@@ -249,6 +250,23 @@ public class Database {
             returnList.add(cycle);
         }
 
+        return returnList;
+    }
+    public static ArrayList<Cycle> getAllCycle(int sid) throws SQLException, ClassNotFoundException {
+        PreparedStatement query = connection.prepareStatement("SELECT * FROM CYCLE WHERE stand_id = ?");
+        query.setInt(1,sid);
+        ResultSet resultSet = query.executeQuery();
+        ArrayList<Cycle> returnList = new ArrayList<>();
+        while(resultSet.next()){
+            Cycle cycle = new Cycle();
+            cycle.setCycle_id(resultSet.getInt("cycle_id"));
+            cycle.setCycle_qr((resultSet.getString("cycle_qr")));
+            cycle.setInUse(resultSet.getBoolean("inUse"));
+            cycle.setStand_id(resultSet.getInt("stand_id"));
+            cycle.setInRepair(resultSet.getBoolean("InRepair"));
+            cycle.setModel_no(resultSet.getString("model_no"));
+            returnList.add(cycle);
+        }
         return returnList;
     }
 

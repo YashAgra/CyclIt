@@ -1,9 +1,13 @@
+import jdk.swing.interop.SwingInterOpUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.StringTokenizer;
 
 public class Cyclit {
@@ -50,9 +54,9 @@ public class Cyclit {
             System.out.println("Stand Info--- Id: " + standList.get(i).getId() + " Location: " + standList.get(i).getLocation() + " No. of cycles Available: " + standList.get(i).getCycleCount());
         }
     }
-    public static void login() throws IOException, SQLException {
+    public static void login() throws IOException, SQLException, ClassNotFoundException {
         //enter user and pass
-        System.out.println("Enter User ID: ");
+        System.out.println("Enter Email ID: ");
         String userid = Reader.nextLine();
         System.out.println("Enter Password: ");
         String pass = Reader.nextLine();
@@ -90,12 +94,27 @@ public class Cyclit {
     private static void displayMenu(User user) {
         System.out.println("display menu");
     }
+    private static void listCycles(int sid) throws SQLException, ClassNotFoundException, IOException {
+        ArrayList<Cycle> cycles = db.getAllCycle(sid);
+        System.out.println("  ID   |    MODEL    ");
+        for (Cycle cycle : cycles) {
+            System.out.println("  "+ cycle.getCycle_id()+"   |   " + cycle.getModel_no());
+        }
+    }
 
-    private static void bookCycle(User user) throws IOException {
+    private static void bookCycle(User user) throws IOException, SQLException, ClassNotFoundException {
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();
-
+        System.out.println("Select a cycle from the list below: \n");
+        listCycles(standId);
+        int cid = Reader.nextInt();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+        OngoingRides ride = new OngoingRides(uid,cid, standId, sdf.format(cal.getTime()));
+        db.addOngoingRides(ride);
+        System.out.println("Cycle booked successfully");
+        //TODO MAKE THE END RIDE FUNCTION
     }
 
     public static void register() throws SQLException, IOException {

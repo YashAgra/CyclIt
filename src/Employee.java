@@ -12,6 +12,7 @@ public class Employee {
     private String EmailAddress;
     private String PhoneNumber;
     private String Address;
+    private String password;
 
     public Employee() throws SQLException, ClassNotFoundException {
     }
@@ -89,11 +90,12 @@ public class Employee {
         System.out.println("EmailID : ");
         employee.setEmailAddress(Reader.nextLine());
 
+        System.out.println("Password: ");
+        employee.setPassword(Reader.nextLine());
         System.out.println("Type : ");
         employee.setType(Reader.next());
         System.out.println("Salary: ");
         employee.setSalary(Reader.nextInt());
-
         Cyclit.db.addEmployee(employee);
     }
 
@@ -132,5 +134,13 @@ public class Employee {
             }
         }
         Cyclit.db.updateEmployee(employee);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
