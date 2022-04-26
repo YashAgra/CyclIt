@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class User {
     private int UserID;
@@ -101,7 +102,7 @@ public class User {
         System.out.println("Address : ");
         user.setAddress(Reader.nextLine());
 
-        System.out.println("ContactNumber : ");
+        System.out.println("Contact Number : ");
         user.setPhoneNumber(Reader.nextLine());
 
         System.out.println("Password : ");
@@ -120,6 +121,7 @@ public class User {
 
         int i;
         while(true){
+            System.out.println("Select an option to change: ");
             System.out.println("1. Change Name");
             System.out.println("2. Change Address");
             System.out.println("3. Change PhoneNumber");
@@ -164,5 +166,20 @@ public class User {
 
     public static void deletefromdb(int id) throws SQLException {
         Cyclit.db.deleteUser(id);
+    }
+
+    public static void updatewalletMoney(User user) throws SQLException {
+        Cyclit.db.updateWalletMoney(user);
+    }
+
+    public static ArrayList<UserTripHistory> gettripHistory(int id) throws SQLException {
+        return Cyclit.db.gettripHistory(id);
+    }
+    public void viewUser(){
+        System.out.println("Name : "+ this.Name);
+        System.out.println("Roll Number: " + this.RollNumber);
+        System.out.println("Email Id: "+ this.EmailID);
+        System.out.println("Address: "+ this.Address);
+        System.out.println("Contact Number: "+ this.PhoneNumber);
     }
 }

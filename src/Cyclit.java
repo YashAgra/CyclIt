@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -22,24 +23,37 @@ public class Cyclit {
 
 
 
+
     public static void login() throws IOException, SQLException, ClassNotFoundException {
+
         //enter user and pass
-        System.out.println("Enter User ID: ");
-        String userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
-        System.out.println("Enter Password: ");
-        String pass = Reader.nextLine();
 
-        int index=-1;
-        for(int i=0;i<userid.length();i++){
-            if(userid.charAt(i)=='@') index=i;
-        }
-        if(index==-1) System.out.println("Invalid Email id");  //TODO TRACE BACK TO LOGIN PAGE
-        boolean isEmployee=false;
-        String sub_email=userid.substring(index,userid.length());
-        if(sub_email.equals("@cyclit.in")) {
-            isEmployee=true;
-        }
+        String userid;
+        boolean isEmployee;
+        String pass;
+        while(true) {
+            System.out.println("Enter Email ID: ");
+            userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
+            System.out.println("Enter Password: ");
+            pass = Reader.nextLine();
 
+            int index = -1;
+            for (int i = 0; i < userid.length(); i++) {
+                if (userid.charAt(i) == '@') index = i;
+            }
+            if (index == -1) {
+                System.out.println("Invalid Email id");
+                continue;
+                //TODO TRACE BACK TO LOGIN PAGE // done//
+            }
+            isEmployee = false;
+            String sub_email = userid.substring(index, userid.length());
+            if (sub_email.equals("@cyclit.in")) {
+                isEmployee = true;
+            }
+            break;
+
+        }
         if(isEmployee){
             its_a_employee(userid,pass);
         }
@@ -121,82 +135,174 @@ public class Cyclit {
         }
     }
 
-    private static void its_a_user(String userid,String pass) throws SQLException, IOException {
+    private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
         User user =User.getfromdb(userid, pass);
         if(user!=null) {
             System.out.println("Welcome " + user.getName() + "\n");
-            System.out.println("================================================================");
-            System.out.println("| id |            Stand Location            | Available Cycles |");
-            System.out.println("================================================================");
-            ArrayList<Stand> standList = db.getAllStand();
-            for (int i = 0; i < standList.size(); i++) {
-                Stand stand = standList.get(i);
-                System.out.print("  ");
-                System.out.print(stand.getId());
-                System.out.print("    |");
-                System.out.print(stand.getLocation());
-                int z = stand.getLocation().length();
-                System.out.print(" ".repeat(41 - z) + "|");
-                System.out.println(stand.getCycleCount());
-
-                //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
+            Stand.listAll();
+//            for (int i = 0; i < standList.size(); i++) {
+//                Stand stand = standList.get(i);
+//                System.out.print("  ");
+//                System.out.print(stand.getId());
+//                System.out.print("    |");
+//                System.out.print(stand.getLocation());
+//                int z = stand.getLocation().length();
+//                System.out.print(" ".repeat(41 - z) + "|");
+//                System.out.println(stand.getCycleCount());
+//
+//                //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
+//            }
+            while(true) {
+                System.out.println("Welcome " + user.getName() + "\n");
+                System.out.println("===================================================");
+                System.out.println("1. Book a bike \n2. Check menu options \n3. Logout");
+                int id = Reader.nextInt();
+                int flag = 0;
+                switch (id) {
+                    case 1:
+                        bookCycle(user);
+                    case 2:
+                        displayMenu(user);
+                    case 3:
+                        flag=1;
+                        break;
+                }
+                if(flag==1) break;
             }
-            System.out.println("===================================================");
-            System.out.println("1. Book a bike \n2. Check menu options");
-            int id = Reader.nextInt();
-            switch (id) {
-                case 1:
-                    bookCycle(user);
-                case 2:
-                    displayMenu(user);
-                case -1:
-                    break;
-            }
+        }
+        else{
+            System.out.println("invalid EmailID or Password \n login Again !");
+            login();
         }
     }
 
     private static void displayMenu(User user) throws IOException, SQLException {
-        System.out.println("display menu");
-        int displayid = Reader.nextInt();
-        switch(displayid){
-            case 1: feedback(user);
-            case 2: viewUserDetails(user);
-            case 3: triphistory(user);
-            case 4: wallet(user);
-            case -1: break;
+        System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n else enter -1 to leave \n");
+        System.out.println();
+        while (true) {
+            int displayid = Reader.nextInt();
+            int flag = 0;
+            switch (displayid) {
+                case 1:
+                    feedback(user);
+                case 2:
+                    viewUserDetails(user);
+                case 3:
+                    triphistory(user);
+                case 4:
+                    wallet(user);
+                case -1:
+                    flag = 1;
+                    break;
+            }
+            if(flag == 1) break;
         }
     }
 
     private static void getAllService() throws SQLException {
-        ArrayList<Service> services=Service.getAll_Active_Services();
+        ResultSet services=Service.getAll_Active_Services();
         System.out.println("=======================================Pending Services=====================================\n");
-        System.out.println("Service_id     Cycle_id        Emp_id          fid            maintenanceInformation");
+        net.efabrika.util.DBTablePrinter.printResultSet(services);
+//        System.out.println("Service_id     Cycle_id        Emp_id          fid            maintenanceInformation");
+//
+//        for(int i=0;i< services.size();i++){
+//            Service service= services.get(i);
+//            System.out.println(service.getService_id()+"    "+service.getCycleID()+"     "+service.getEmployeeID()+"      "+service.getFid()+"        "+service.getMaintenanceInformation());
+//        }
+}
 
-        for(int i=0;i< services.size();i++){
-            Service service= services.get(i);
-            System.out.println(service.getService_id()+"    "+service.getCycleID()+"     "+service.getEmployeeID()+"      "+service.getFid()+"        "+service.getMaintenanceInformation());
+    private static void updateUserDetails(User user) throws IOException, SQLException {
+//        System.out.println("Update User Details, Please note the options here :");
+        int userid = user.getUserID();
+
+//        System.out.println("===============================================================================================");
+//        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
+//        System.out.println("===============================================================================================");
+        user.viewUser();
+        User.updatedb(userid); //update user ID function
+//        System.out.println("===============================================================================================");
+//        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
+//        System.out.println("===============================================================================================");
+        System.out.println("Updated Details are: ");
+        User.getfromdb(userid).viewUser();
+    }
+
+    private static void wallet(User user) throws IOException, SQLException {
+        int input;
+        while(true){
+            System.out.println("================================================================");
+            System.out.println("Current Amount : " + user.getWallet());
+            System.out.println("1. Add Money");
+            System.out.println("2. exit");
+            input = Reader.nextInt();
+            if(input == 1){
+                System.out.println("==============================================================");
+                System.out.println("Enter Amount: ");
+                int amount = Reader.nextInt();
+                Payment_interface.addPayInterface(user.getUserID(),amount,true);
+                System.out.println("Confirm Amount (Y/N) : ");
+                String con = Reader.nextLine();
+                if(con.equals("Y") || con.equals("y")){
+                    Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
+                    //Payment_interface.deletePayInterface_byUserId(user.getUserID());
+                    user.setWallet(user.getWallet()+amount);
+                    User.updatewalletMoney(user);
+                    user = User.getfromdb(user.getUserID());
+                }
+                else {
+                    System.out.println("Invalid Input (Try Again)");
+                    continue;
+                }
+
+            } else if (input == 2) {
+                break;
+            }
         }
     }
 
-    private static void wallet(User user) {
-
-    }
-
     private static void triphistory(User user) {
-        System.out.println("================================================================");
-        System.out.println("| id |            Stand Location            | Available Cycles |");
-        System.out.println("================================================================");
+
     }
 
-    private static void viewUserDetails(User user) {
-
+    private static void viewUserDetails(User user) throws SQLException, IOException {
+        int i = user.getUserID();
+        System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
+        int viewUserDetailMenu = Reader.nextInt();
+        int flag = 0;
+        while (true) {
+            switch (viewUserDetailMenu) {
+                case 1:
+                    User.getfromdb(i);
+                    break;
+                case 2:
+                    updateUserDetails(user);
+                    break;
+                case -1:
+                    flag = 1;
+                    break;
+            }
+            if (flag == 1) break;
+        }
     }
 
     private static void feedback(User user) throws SQLException, IOException {
         Feedback.addFeedBack(user.getUserID());
     }
 
-    private static void bookCycle(User user) throws IOException {
+    private static void bookCycle(User user) throws IOException, SQLException {
+        ArrayList<Stand> standList = db.getAllStand();
+        for (int i = 0; i < standList.size(); i++) {
+            Stand stand = standList.get(i);
+            System.out.print("  ");
+            System.out.print(stand.getId());
+            System.out.print("    |");
+            System.out.print(stand.getLocation());
+            int z = stand.getLocation().length();
+            System.out.print(" ".repeat(41 - z) + "|");
+            System.out.println(stand.getCycleCount());
+
+            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
+        }
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();
@@ -213,12 +319,18 @@ public class Cyclit {
         while(true){
             System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
             int i = Reader.nextInt();
-            switch(i){
-                case 1: login(); System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
-                case 2: register(); System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
-                case 3: break;
+
                 //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
+
+            if(i==1){
+                login();
+            } else if (i==2) {
+                register();
             }
+            else {
+                break;
+            }
+                //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
         }
         /*
         login page ask the user to login
@@ -227,7 +339,6 @@ public class Cyclit {
         login() function
         register(){ addUser }
          */
-
     }
 
     //-------------------------Cycle--------------------------------------------------------
