@@ -27,23 +27,32 @@ public class Cyclit {
     public static void login() throws IOException, SQLException, ClassNotFoundException {
 
         //enter user and pass
+        String userid;
+        boolean isEmployee;
+        String pass;
+        while(true) {
+            System.out.println("Enter User ID: ");
+            userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
+            System.out.println("Enter Password: ");
+            pass = Reader.nextLine();
 
-        System.out.println("Enter User ID: ");
-        String userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
-        System.out.println("Enter Password: ");
-        String pass = Reader.nextLine();
+            int index = -1;
+            for (int i = 0; i < userid.length(); i++) {
+                if (userid.charAt(i) == '@') index = i;
+            }
+            if (index == -1) {
+                System.out.println("Invalid Email id");
+                continue;
+                //TODO TRACE BACK TO LOGIN PAGE // done//
+            }
+            isEmployee = false;
+            String sub_email = userid.substring(index, userid.length());
+            if (sub_email.equals("@cyclit.in")) {
+                isEmployee = true;
+            }
+            break;
 
-        int index=-1;
-        for(int i=0;i<userid.length();i++){
-            if(userid.charAt(i)=='@') index=i;
         }
-        if(index==-1) System.out.println("Invalid Email id");  //TODO TRACE BACK TO LOGIN PAGE
-        boolean isEmployee=false;
-        String sub_email=userid.substring(index,userid.length());
-        if(sub_email.equals("@cyclit.in")) {
-            isEmployee=true;
-        }
-
         if(isEmployee){
             its_a_employee(userid,pass);
         }
@@ -125,13 +134,10 @@ public class Cyclit {
         }
     }
 
-    private static void its_a_user(String userid,String pass) throws SQLException, IOException {
+    private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
         User user =User.getfromdb(userid, pass);
         if(user!=null) {
             System.out.println("Welcome " + user.getName() + "\n");
-//            System.out.println("================================================================");
-//            System.out.println("| id |            Stand Location            | Available Cycles |");
-//            System.out.println("================================================================");
             Stand.listAll();
 //            for (int i = 0; i < standList.size(); i++) {
 //                Stand stand = standList.get(i);
@@ -145,25 +151,36 @@ public class Cyclit {
 //
 //                //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
 //            }
-            System.out.println("===================================================");
-            System.out.println("1. Book a bike \n2. Check menu options");
-            int id = Reader.nextInt();
-            switch (id) {
-                case 1:
-                    bookCycle(user);
-                case 2:
-                    displayMenu(user);
-                case -1:
-                    break;
+            while(true) {
+                System.out.println("Welcome " + user.getName() + "\n");
+                System.out.println("===================================================");
+                System.out.println("1. Book a bike \n2. Check menu options \n3. Logout");
+                int id = Reader.nextInt();
+                int flag = 0;
+                switch (id) {
+                    case 1:
+                        bookCycle(user);
+                    case 2:
+                        displayMenu(user);
+                    case 3:
+                        flag=1;
+                        break;
+                }
+                if(flag==1) break;
             }
+        }
+        else{
+            System.out.println("invalid EmailID or Password \n login Again !");
+            login();
         }
     }
 
     private static void displayMenu(User user) throws IOException, SQLException {
         System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n 5. Update your details\n else enter -1 to leave \n");
         System.out.println();
-        int displayid = Reader.nextInt();
         while (true) {
+            int displayid = Reader.nextInt();
+            int flag = 0;
             switch (displayid) {
                 case 1:
                     feedback(user);
@@ -176,8 +193,10 @@ public class Cyclit {
                 case 5:
                     updateUserDetails(user);
                 case -1:
+                    flag = 1;
                     break;
             }
+            if(flag == 1) break;
         }
     }
 
@@ -261,7 +280,20 @@ public class Cyclit {
         Feedback.addFeedBack(user.getUserID());
     }
 
-    private static void bookCycle(User user) throws IOException {
+    private static void bookCycle(User user) throws IOException, SQLException {
+        ArrayList<Stand> standList = db.getAllStand();
+        for (int i = 0; i < standList.size(); i++) {
+            Stand stand = standList.get(i);
+            System.out.print("  ");
+            System.out.print(stand.getId());
+            System.out.print("    |");
+            System.out.print(stand.getLocation());
+            int z = stand.getLocation().length();
+            System.out.print(" ".repeat(41 - z) + "|");
+            System.out.println(stand.getCycleCount());
+
+            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
+        }
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();
@@ -278,12 +310,15 @@ public class Cyclit {
         while(true){
             System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
             int i = Reader.nextInt();
-            switch(i){
-                case 1: login();
-                case 2: register();
-                case 3: break;
-                //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
+            if(i==1){
+                login();
+            } else if (i==2) {
+                register();
             }
+            else {
+                break;
+            }
+                //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
         }
         /*
         login page ask the user to login
@@ -292,7 +327,6 @@ public class Cyclit {
         login() function
         register(){ addUser }
          */
-
     }
 
     //-------------------------Cycle--------------------------------------------------------
