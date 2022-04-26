@@ -88,7 +88,7 @@ public class User {
         this.wallet = wallet;
     }
 
-    static void addtodb() throws IOException, SQLException {
+    public static void addtodb() throws IOException, SQLException {
         User user = new User();
         System.out.println("Name : ");
         user.setName(Reader.nextLine());
@@ -112,7 +112,7 @@ public class User {
         Cyclit.db.addUser(user);
     }
 
-    static User getfromdb(int id) throws SQLException {
+    public static User getfromdb(int id) throws SQLException {
         return Cyclit.db.getUser(id);
     }
 
@@ -147,7 +147,7 @@ public class User {
         }
         Cyclit.db.updateUser(user);
     }
-    static User getfromdb(String email, String pass) throws SQLException {
+    public static User getfromdb(String email, String pass) throws SQLException {
         Database db = Cyclit.db;
         PreparedStatement query = Database.connection.prepareStatement("SELECT user_id FROM user where email = ? and password = ?");
         query.setString(1, email);
@@ -162,7 +162,8 @@ public class User {
             return user;
         }
     }
-    static void deletefromdb(int id) throws SQLException {
+
+    public static void deletefromdb(int id) throws SQLException {
         Cyclit.db.deleteUser(id);
     }
 

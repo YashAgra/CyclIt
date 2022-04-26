@@ -17,7 +17,6 @@ public class Cycle {
     private String model_no;
 
     public int getCycle_id() {
-
         return cycle_id;
     }
 
@@ -125,14 +124,27 @@ public class Cycle {
         return Cyclit.db.getCycleinfo(cid);
     }
 
-    public static void deleteCyclefromdb(int cid) throws SQLException {
+    public static void deleteCyclefromdb() throws SQLException, IOException {
+        System.out.println("Enter cycle_id to be Deleted:");
+        int cid=Reader.nextInt();
         Cyclit.db.deleteCycle(cid);
     }
 
-    public static ArrayList<Cycle> getAllCycle() throws SQLException, ClassNotFoundException {
-        return Cyclit.db.getAllCycle();
+
+    public static void listAllCycle() throws SQLException, ClassNotFoundException {
+        ArrayList<Cycle> cycles=Cyclit.db.getAllCycle();
+        System.out.println("=====================================Cycles===============================\n\n");
+
+        System.out.println("Cycle id    QR_code    Stand_ID    InUSe    InRepair     Model_no\n");
+        for(int i=0;i<cycles.size();i++){
+            Cycle cycle=cycles.get(i);
+            System.out.println(cycle.getCycle_id()+"  "+cycle.getCycle_qr()+"   "+cycle.getStand_id()+"  "+cycle.getInUse()+"  "+cycle.getInRepair()+"  "+cycle.getModel_no());
+        }
     }
 
+
+
+    //TODO LIST ALL CYCLES
 
 
 
