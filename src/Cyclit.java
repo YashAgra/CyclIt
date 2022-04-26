@@ -50,6 +50,7 @@ public class Cyclit {
 //            System.out.println("Stand Info--- Id: " + standList.get(i).getId() + " Location: " + standList.get(i).getLocation() + " No. of cycles Available: " + standList.get(i).getCycleCount());
 //        }
 //    }
+
     public static void login() throws IOException, SQLException {
         //enter user and pass
         System.out.println("Enter User ID: ");
@@ -88,15 +89,24 @@ public class Cyclit {
     }
 
     private static void displayMenu(User user) throws IOException, SQLException {
-        System.out.println("display menu");
+        System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n 5. Update your details\n else enter -1 to leave \n");
+        System.out.println();
         int displayid = Reader.nextInt();
-        switch(displayid){
-            case 1: feedback(user);
-            case 2: viewUserDetails(user);
-            case 3: triphistory(user);
-            case 4: wallet(user);
-            case 5: updateUserDetails(user);
-            case -1: break;
+        while (true) {
+            switch (displayid) {
+                case 1:
+                    feedback(user);
+                case 2:
+                    viewUserDetails(user);
+                case 3:
+                    triphistory(user);
+                case 4:
+                    wallet(user);
+                case 5:
+                    updateUserDetails(user);
+                case -1:
+                    break;
+            }
         }
     }
 
@@ -106,7 +116,7 @@ public class Cyclit {
         System.out.println("===============================================================================================");
         System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
         System.out.println("===============================================================================================");
-        User.getfromdb(userid);
+        User.getfromdb(userid); //print initial user id
         User.updatedb(userid); //update user ID function
         System.out.println("===============================================================================================");
         System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
