@@ -27,7 +27,7 @@ public class Cyclit {
 
         //enter user and pass
 
-        System.out.println("Enter User ID: ");
+        System.out.println("Enter Email ID: ");
         String userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
         System.out.println("Enter Password: ");
         String pass = Reader.nextLine();
@@ -159,7 +159,7 @@ public class Cyclit {
     }
 
     private static void displayMenu(User user) throws IOException, SQLException {
-        System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n 5. Update your details\n else enter -1 to leave \n");
+        System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n else enter -1 to leave \n");
         System.out.println();
         int displayid = Reader.nextInt();
         while (true) {
@@ -172,8 +172,6 @@ public class Cyclit {
                     triphistory(user);
                 case 4:
                     wallet(user);
-                case 5:
-                    updateUserDetails(user);
                 case -1:
                     break;
             }
@@ -239,18 +237,25 @@ public class Cyclit {
     }
 
     private static void triphistory(User user) {
-        System.out.println("=========================================================================================================");
-        System.out.println("| cyclid |  |source_stand|  |dest_stand|  |   startTime  |  |  endTime  |  |     Date     |  |PaymentID| ");
-        System.out.println("=========================================================================================================");
+
 
     }
 
-    private static void viewUserDetails(User user) throws SQLException {
-        System.out.println("===============================================================================================");
-        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-        System.out.println("===============================================================================================");
+    private static void viewUserDetails(User user) throws SQLException, IOException {
+
         int i = user.getUserID();
-        User.getfromdb(i);
+        System.out.println("1. View User details \n 2. Update user details");
+        int viewUserDetailMenu = Reader.nextInt();
+        while (true) {
+            switch (viewUserDetailMenu) {
+                case 1:
+                    User.getfromdb(i);
+                case 2:
+                    updateUserDetails(user);
+                case -1:
+                    break;
+            }
+        }
     }
 
     private static void feedback(User user) throws SQLException, IOException {
