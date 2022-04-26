@@ -146,6 +146,26 @@ public class Database {
         query.executeUpdate();
         query.close();
     }
+    public ArrayList<UserTripHistory> gettripHistory(int id) throws SQLException {
+        ArrayList<UserTripHistory> list = new ArrayList<UserTripHistory>();
+        PreparedStatement query = connection.prepareStatement("select * from trip_history where uid = ?");
+        query.setInt(1,id);
+        ResultSet result = query.executeQuery();
+        while(result.next()){
+            UserTripHistory trip =  new UserTripHistory();
+            trip.setDate(result.getString("date"));
+            trip.setCycleId(result.getInt("cid"));
+            trip.setDistance(result.getInt("distance"));
+            trip.setDestStandId(result.getInt("dest_stand"));
+            trip.setEndTime(result.getTime("end").toString());
+            trip.setPayID(result.getInt("pid"));
+            trip.setSourceStandID(result.getInt("source_stand"));
+            trip.setStartTime(result.getTime("start").toString());
+            trip.setUserID(result.getInt("uid"));
+            list.add(trip);
+        }
+        return list;
+    }
 
     public void updateWalletMoney(User user) throws SQLException {
         PreparedStatement query = connection.prepareStatement("UPDATE User set Wallet = ? where user_id = ? ");

@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class User {
     private int UserID;
@@ -167,5 +168,9 @@ public class User {
 
     public static void updatewalletMoney(User user) throws SQLException {
         Cyclit.db.updateWalletMoney(user);
+    }
+
+    public static ArrayList<UserTripHistory> gettripHistory(int id) throws SQLException {
+        return Cyclit.db.gettripHistory(id);
     }
 }

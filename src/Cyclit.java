@@ -53,6 +53,7 @@ public class Cyclit {
 
     public static void login() throws IOException, SQLException {
         //enter user and pass
+
         System.out.println("Enter User ID: ");
         String userid = Reader.nextLine(); //user id means email id of the user (which means email id of the user)
         System.out.println("Enter Password: ");
@@ -158,9 +159,10 @@ public class Cyclit {
     }
 
     private static void triphistory(User user) {
-        System.out.println("================================================================");
-        System.out.println("| id |            Stand Location            | Available Cycles |");
-        System.out.println("================================================================");
+        System.out.println("=========================================================================================================");
+        System.out.println("| cyclid |  |source_stand|  |dest_stand|  |   startTime  |  |  endTime  |  |     Date     |  |PaymentID| ");
+        System.out.println("=========================================================================================================");
+
     }
 
     private static void viewUserDetails(User user) throws SQLException {
@@ -193,8 +195,8 @@ public class Cyclit {
             System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
             int i = Reader.nextInt();
             switch(i){
-                case 1: login(); System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
-                case 2: register(); System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
+                case 1: login();
+                case 2: register();
                 case 3: break;
                 //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
             }
