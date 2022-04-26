@@ -101,7 +101,7 @@ public class User {
         System.out.println("Address : ");
         user.setAddress(Reader.nextLine());
 
-        System.out.println("ContactNumber : ");
+        System.out.println("Contact Number : ");
         user.setPhoneNumber(Reader.nextLine());
 
         System.out.println("Password : ");
