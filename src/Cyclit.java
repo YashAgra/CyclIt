@@ -124,8 +124,37 @@ public class Cyclit {
         User.getfromdb(userid);
     }
 
-    private static void wallet(User user) {
+    private static void wallet(User user) throws IOException, SQLException {
+        int input;
+        while(true){
+            System.out.println("================================================================");
+            System.out.println("Current Amount : " + user.getWallet());
+            System.out.println("1. Add Money");
+            System.out.println("2. exit");
+            input = Reader.nextInt();
+            if(input == 1){
+                System.out.println("==============================================================");
+                System.out.println("Enter Amount: ");
+                int amount = Reader.nextInt();
+                Payment_interface.addPayInterface(user.getUserID(),amount,true);
+                System.out.println("Confirm Amount (Y/N) : ");
+                String con = Reader.nextLine();
+                if(con.equals("Y") || con.equals("y")){
+                    Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
+                    //Payment_interface.deletePayInterface_byUserId(user.getUserID());
+                    user.setWallet(user.getWallet()+amount);
+                    User.updatewalletMoney(user);
+                    user = User.getfromdb(user.getUserID());
+                }
+                else {
+                    System.out.println("Invalid Input (Try Again)");
+                    continue;
+                }
 
+            } else if (input == 2) {
+                break;
+            }
+        }
     }
 
     private static void triphistory(User user) {

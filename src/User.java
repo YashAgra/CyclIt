@@ -164,4 +164,8 @@ public class User {
     static void deletefromdb(int id) throws SQLException {
         Cyclit.db.deleteUser(id);
     }
+
+    public static void updatewalletMoney(User user) throws SQLException {
+        Cyclit.db.updateWalletMoney(user);
+    }
 }
