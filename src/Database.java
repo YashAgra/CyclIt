@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -463,4 +464,99 @@ public class Database {
     }
 
 
+    //10 Queries start from Here !
+
+    //<Start with HR>
+    public void employeeNaturalJoinCustomer() throws SQLException {
+        /* List all the employees who uses our app as a customer */
+
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+        System.out.println("Greetings HR! This is the list of all employees who use our application as a customer : ");
+        /*select user.name, user.phone , user.email, user.address from user
+        inner join employee on employee.eid = user.user_id; */
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+
+    }
+
+    public void averageSalaryofEmployeeTypes() throws SQLException {
+        System.out.println("Greetings HR! This is the average value Salary according to HR department, PR department, Service Department and Cycle Manager Department !");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery("SELECT type, AVG(salary) AS val_1 FROM employee GROUP BY type;"); // TODO add sql
+
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+
+    }
+
+    //<HR queries end>
+
+
+    //<PR Team queries begin>
+    public void completeUserData () throws SQLException {
+        //find all the users of the app (employee union user)
+        Statement query = connection.createStatement();
+        System.out.println("Greetings PR! This is the list of all the users : This list is for both employee and users, and does not have any duplicates");
+
+        ResultSet resultSet = query.executeQuery("SELECT name, address, email, phone FROM user UNION select name, address,email, phone from employee;"); // TODO add sql
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+
+    }
+        //System.out.println("Greetings PR!");
+
+    public void averageSpendGreaterThanAmount() throws SQLException, IOException {
+        //List of users with Average spend greater than certain amount which is inputed
+        System.out.println("Greetings PR! Please input the amount by which you want to check for spending");
+        int amount = Reader.nextInt(); //TODO use amount for this query, and input the same!
+
+        System.out.println("Greetings PR! This is the list of cycle users which have spend them more than " +  amount +  " You have the authority to reward them now!");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+
+    }
+
+    public void usersWithEveryCycle() throws SQLException {
+        System.out.println("Greetings PR! This is the list of users who have used every single cycle. Send Promo-code!");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+        //Please note the query!
+//        select distinct user.id, user.name
+//        from user
+//        where not exists((select cycle_id
+//                from cycle
+//                except
+//                select user_history.cycle_id
+//                from user_history
+//                where user_history.cycleid = user.cycleid
+    }
+
+    public void countServiceConversionFromFeebackByUser() throws SQLException {
+        /* join feedback and services tables and group it by user id to find the count of feedbacks submitted by each user */
+        /* Count number of feedbacks by each user, which was converted to a Service */
+
+        System.out.println("Greetings PR! These is table informs about feedback to service for each user. This is for data analytics that can be used to improve feedback");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(" "); // TODO add sql
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+//        select user_id, count(id) as number_of_users
+//        from feedback
+//        group by user_id;
+    }
+    // <PR team end>
+
+    // <Cycle Manager Queries begin>
+
+    public void feedbackToService() throws SQLException {
+        System.out.println("Greetings Cycle Managers! Check the services that were derived from feedback !");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery("SELECT * from feedback natural join service;"); // TODO check SQL query that I inputed
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+    }
+
+    // <Cycle Manager Queries begin>
+
+    // TODO 1 query left that will be inputed in user trip history function. Number of queries left to write = 3
+
+    //Changes made
 }
