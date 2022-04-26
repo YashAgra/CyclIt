@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -55,10 +56,8 @@ public class Stand {
         System.out.println("Stand Info--- Id: "+ returnStand.getId()+ " Location: "+ returnStand.getLocation()+" No. of cycles Available: "+ returnStand.getCycleCount());
     }
     public static void listAll() throws IOException, SQLException{
-        ArrayList<Stand> standList = db.getAllStand();
-        for(int i=0;i<standList.size();i++){
-            System.out.println("Stand Info--- Id: "+ standList.get(i).getId()+ " Location: "+ standList.get(i).getLocation()+" No. of cycles Available: "+ standList.get(i).getCycleCount());
-        }
+        ResultSet standList = db.getAllStand();
+        net.efabrika.util.DBTablePrinter.printResultSet(standList);
     }
     public  void updateStandCycles(int cycleCount) throws IOException, SQLException{
         Stand stand = db.getStandById(this.id);
