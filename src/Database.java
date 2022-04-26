@@ -2,9 +2,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
-    public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
+    public static final String connection_url = "jdbc:mysql://localhost:3306/cyclit";
     public static final String user = "root";
-    public static final String password = "12345678";
+    public static final String password = "123456789";
     public static Connection connection = null;
     Database() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -20,18 +20,18 @@ public class Database {
         query.close();
     }
     //executeQuery: read
-    public ArrayList<Stand> getAllStand() throws SQLException {
+    public ResultSet getAllStand() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("SELECT * FROM STAND");
-        ArrayList<Stand> returnList = new ArrayList<>();
-        while(resultSet.next()){
-            Stand stand = new Stand();
-            stand.setId(resultSet.getInt("id"));
-            stand.setLocation(resultSet.getString("location"));
-            stand.setCycleCount(resultSet.getInt("cycleCount"));
-            returnList.add(stand);
-        }
-        return returnList;
+//        ArrayList<Stand> returnList = new ArrayList<>();
+//        while(resultSet.next()){
+//            Stand stand = new Stand();
+//            stand.setId(resultSet.getInt("id"));
+//            stand.setLocation(resultSet.getString("location"));
+//            stand.setCycleCount(resultSet.getInt("cycleCount"));
+//            returnList.add(stand);
+//        }
+        return resultSet;
     }
 
     public Stand getStandById(int id) throws SQLException{
@@ -72,6 +72,7 @@ public class Database {
         query.setString(4, employee.getType());
         query.setString(5, employee.getName());
         query.setInt(6,employee.getSalary());
+        query.setString(7, employee.getPassword());
         query.executeUpdate();
         query.close();
     }
@@ -179,7 +180,7 @@ public class Database {
         query.setInt(2,ride.getCycleID());
         query.setInt(3,ride.getStandID());
         query.setString(4,ride.getOutTime());
-        query.executeQuery();
+        query.executeUpdate();
         query.close();
 
     }
@@ -265,9 +266,17 @@ public class Database {
         return c;
     }
 
-    public  ArrayList<Cycle> getAllCycle() throws SQLException, ClassNotFoundException {
+    public  ResultSet getAllCycle() throws SQLException, ClassNotFoundException {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("SELECT * FROM cycle");
+        return resultSet;
+    }
+
+    //Get all cycles on a stand
+    public static ArrayList<Cycle> getAllCycle(int sid) throws SQLException, ClassNotFoundException {
+        PreparedStatement query = connection.prepareStatement("SELECT * FROM CYCLE WHERE stand_id = ?");
+        query.setInt(1,sid);
+        ResultSet resultSet = query.executeQuery();
         ArrayList<Cycle> returnList = new ArrayList<>();
         while(resultSet.next()){
             Cycle cycle = new Cycle();
@@ -277,10 +286,8 @@ public class Database {
             cycle.setStand_id(resultSet.getInt("stand_id"));
             cycle.setInRepair(resultSet.getBoolean("InRepair"));
             cycle.setModel_no(resultSet.getString("model_no"));
-
             returnList.add(cycle);
         }
-
         return returnList;
     }
 
@@ -403,54 +410,56 @@ public class Database {
 
 
 
-    public ArrayList<Service> getAll_Active_Services() throws SQLException {
+    public ResultSet getAll_Active_Services() throws SQLException {
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery("SELECT * FROM service");
-        ArrayList<Service> returnList = new ArrayList<>();
-        while(resultSet.next()){
-            Service service = new Service();
+        ResultSet resultSet = query.executeQuery("SELECT * FROM service where ticketStatus = False");
+//        ArrayList<Service> returnList = new ArrayList<>();
+//        while(resultSet.next()){
+//            Service service = new Service();
+//
+//            boolean status=resultSet.getBoolean("ticketStatus");
+//            if(status==true) continue;
+//
+//            service.setServiceId(resultSet.getInt("id"));
+//            service.setEmployeeID(resultSet.getInt("eid"));
+//            service.setCycleID(resultSet.getInt("cycle_id"));
+//            service.setFid(resultSet.getInt("fid"));
+//            service.setMaintenanceInformation(resultSet.getString("maint_info"));
+//            service.setTicket(resultSet.getBoolean("ticketStatus"));
+//            returnList.add(service);
+//        }
 
-            boolean status=resultSet.getBoolean("ticketStatus");
-            if(status==true) continue;
-
-            service.setServiceId(resultSet.getInt("id"));
-            service.setEmployeeID(resultSet.getInt("eid"));
-            service.setCycleID(resultSet.getInt("cycle_id"));
-            service.setFid(resultSet.getInt("fid"));
-            service.setMaintenanceInformation(resultSet.getString("maint_info"));
-            service.setTicket(resultSet.getBoolean("ticketStatus"));
-            returnList.add(service);
-        }
-
-        return returnList;
+        return resultSet;
     }
 
     public void getEmployeeDetials_publicInfo() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("SELECT * FROM employee_details");
         System.out.println("=============================Employee Details========================================\n");
-        System.out.println("");
-        while(resultSet.next()){
-            System.out.println(resultSet.getInt("eid")+" "+
-                               resultSet.getString("name")+" "+
-                                resultSet.getString("email")+ " "+
-                                resultSet.getString("phone")+" "+
-                                resultSet.getString("address"));
-        }
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+//        System.out.println("");
+//        while(resultSet.next()){
+//            System.out.println(resultSet.getInt("eid")+" "+
+//                               resultSet.getString("name")+" "+
+//                                resultSet.getString("email")+ " "+
+//                                resultSet.getString("phone")+" "+
+//                                resultSet.getString("address"));
+//        }
     }
 
     public void getUserDetails_publicInfo() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("SELECT * FROM user_details");
-        System.out.println("=============================User Details========================================\n");
-        System.out.println();
-        while(resultSet.next()){
-            System.out.println(resultSet.getInt("user_id")+" "+
-                    resultSet.getString("name")+" "+
-                    resultSet.getString("email")+ " "+
-                    resultSet.getString("phone")+" "+
-                    resultSet.getString("address"));
-        }
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+//        System.out.println("=============================User Details========================================\n");
+//        System.out.println();
+//        while(resultSet.next()){
+//            System.out.println(resultSet.getInt("user_id")+" "+
+//                    resultSet.getString("name")+" "+
+//                    resultSet.getString("email")+ " "+
+//                    resultSet.getString("phone")+" "+
+//                    resultSet.getString("address"));
+//        }
     }
 
 

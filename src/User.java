@@ -121,6 +121,7 @@ public class User {
 
         int i;
         while(true){
+            System.out.println("Select an option to change: ");
             System.out.println("1. Change Name");
             System.out.println("2. Change Address");
             System.out.println("3. Change PhoneNumber");
@@ -173,5 +174,12 @@ public class User {
 
     public static ArrayList<UserTripHistory> gettripHistory(int id) throws SQLException {
         return Cyclit.db.gettripHistory(id);
+    }
+    public void viewUser(){
+        System.out.println("Name : "+ this.Name);
+        System.out.println("Roll Number: " + this.RollNumber);
+        System.out.println("Email Id: "+ this.EmailID);
+        System.out.println("Address: "+ this.Address);
+        System.out.println("Contact Number: "+ this.PhoneNumber);
     }
 }

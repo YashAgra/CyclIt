@@ -132,19 +132,21 @@ public class Cycle {
 
 
     public static void listAllCycle() throws SQLException, ClassNotFoundException {
-        ArrayList<Cycle> cycles=Cyclit.db.getAllCycle();
-        System.out.println("=====================================Cycles===============================\n\n");
 
-        System.out.println("Cycle id    QR_code    Stand_ID    InUSe    InRepair     Model_no\n");
-        for(int i=0;i<cycles.size();i++){
-            Cycle cycle=cycles.get(i);
-            System.out.println(cycle.getCycle_id()+"  "+cycle.getCycle_qr()+"   "+cycle.getStand_id()+"  "+cycle.getInUse()+"  "+cycle.getInRepair()+"  "+cycle.getModel_no());
-        }
+        ResultSet cycles=Cyclit.db.getAllCycle();
+        net.efabrika.util.DBTablePrinter.printResultSet(cycles);
+//        System.out.println("=====================================Cycles===============================\n\n");
+//
+//        System.out.println("Cycle id    QR_code    Stand_ID    InUSe    InRepair     Model_no\n");
+//        for(int i=0;i<cycles.size();i++){
+//            Cycle cycle=cycles.get(i);
+//            System.out.println(cycle.getCycle_id()+"  "+cycle.getCycle_qr()+"   "+cycle.getStand_id()+"  "+cycle.getInUse()+"  "+cycle.getInRepair()+"  "+cycle.getModel_no());
+//        }
     }
 
 
 
-    //TODO LIST ALL CYCLES
+
 
 
 
