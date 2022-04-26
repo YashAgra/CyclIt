@@ -1,5 +1,3 @@
-import com.mysql.cj.x.protobuf.MysqlxPrepare;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -22,18 +20,18 @@ public class Database {
         query.close();
     }
     //executeQuery: read
-    public ArrayList<Stand> getAllStand() throws SQLException {
+    public ResultSet getAllStand() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("SELECT * FROM STAND");
-        ArrayList<Stand> returnList = new ArrayList<>();
-        while(resultSet.next()){
-            Stand stand = new Stand();
-            stand.setId(resultSet.getInt("id"));
-            stand.setLocation(resultSet.getString("location"));
-            stand.setCycleCount(resultSet.getInt("cycleCount"));
-            returnList.add(stand);
-        }
-        return returnList;
+//        ArrayList<Stand> returnList = new ArrayList<>();
+//        while(resultSet.next()){
+//            Stand stand = new Stand();
+//            stand.setId(resultSet.getInt("id"));
+//            stand.setLocation(resultSet.getString("location"));
+//            stand.setCycleCount(resultSet.getInt("cycleCount"));
+//            returnList.add(stand);
+//        }
+        return resultSet;
     }
 
     public Stand getStandById(int id) throws SQLException{
@@ -147,6 +145,26 @@ public class Database {
         query.executeUpdate();
         query.close();
     }
+    public ArrayList<UserTripHistory> gettripHistory(int id) throws SQLException {
+        ArrayList<UserTripHistory> list = new ArrayList<UserTripHistory>();
+        PreparedStatement query = connection.prepareStatement("select * from trip_history where uid = ?");
+        query.setInt(1,id);
+        ResultSet result = query.executeQuery();
+        while(result.next()){
+            UserTripHistory trip =  new UserTripHistory();
+            trip.setDate(result.getString("date"));
+            trip.setCycleId(result.getInt("cid"));
+            trip.setDistance(result.getInt("distance"));
+            trip.setDestStandId(result.getInt("dest_stand"));
+            trip.setEndTime(result.getTime("end").toString());
+            trip.setPayID(result.getInt("pid"));
+            trip.setSourceStandID(result.getInt("source_stand"));
+            trip.setStartTime(result.getTime("start").toString());
+            trip.setUserID(result.getInt("uid"));
+            list.add(trip);
+        }
+        return list;
+    }
 
     public void updateWalletMoney(User user) throws SQLException {
         PreparedStatement query = connection.prepareStatement("UPDATE User set Wallet = ? where user_id = ? ");
@@ -248,23 +266,10 @@ public class Database {
         return c;
     }
 
-    public static ArrayList<Cycle> getAllCycle() throws SQLException, ClassNotFoundException {
+    public  ResultSet getAllCycle() throws SQLException, ClassNotFoundException {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("SELECT * FROM cycle");
-        ArrayList<Cycle> returnList = new ArrayList<>();
-        while(resultSet.next()){
-            Cycle cycle = new Cycle();
-            cycle.setCycle_id(resultSet.getInt("cycle_id"));
-            cycle.setCycle_qr((resultSet.getString("cycle_qr")));
-            cycle.setInUse(resultSet.getBoolean("inUse"));
-            cycle.setStand_id(resultSet.getInt("stand_id"));
-            cycle.setInRepair(resultSet.getBoolean("InRepair"));
-            cycle.setModel_no(resultSet.getString("model_no"));
-
-            returnList.add(cycle);
-        }
-
-        return returnList;
+        return resultSet;
     }
 
     //Get all cycles on a stand
@@ -293,7 +298,7 @@ public class Database {
         query.close();
     }
 
-    public static void addFeedBack(Feedback feed) throws SQLException {
+    public  void addFeedBack(Feedback feed) throws SQLException {
         PreparedStatement query= connection.prepareStatement("INSERT INTO feedback(user_id,feedback) values(?,?) ");
         query.setInt(1,feed.getUser_id());
         query.setString(2,feed.getFeedback());
@@ -302,7 +307,7 @@ public class Database {
         query.close();
     }
 
-    public static ArrayList<Feedback> getAllFeedback() throws SQLException {
+    public  ArrayList<Feedback> getAllFeedback() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("SELECT * FROM feedback");
         ArrayList<Feedback> returnList = new ArrayList<>();
@@ -318,7 +323,7 @@ public class Database {
 
     }
 
-    public static void addPayInterface(Payment_interface pay) throws SQLException {
+    public  void addPayInterface(Payment_interface pay) throws SQLException {
         PreparedStatement query= connection.prepareStatement("INSERT INTO payment_interface(user_id,amount,isWalletRecharge,status) values(?,?,?,?) ");
         query.setInt(1,pay.getUser_id());
         query.setInt(2,pay.getAmount());
@@ -329,7 +334,7 @@ public class Database {
         query.close();
     }
 
-    public static void UpdatePayInter_wallet(int user_id, boolean isWallet) throws SQLException {
+    public  void UpdatePayInter_wallet(int user_id, boolean isWallet) throws SQLException {
         PreparedStatement query= connection.prepareStatement("UPDATE payment_interface SET isWalletRecharge=? where user_id=?");
         query.setBoolean(1,isWallet);
         query.setInt(2,user_id);
@@ -338,7 +343,7 @@ public class Database {
         query.close();
     }
 
-    public static void UpdatePayInter_status(int user_id, boolean status) throws SQLException {
+    public  void UpdatePayInter_status(int user_id, boolean status) throws SQLException {
         PreparedStatement query= connection.prepareStatement("UPDATE payment_interface SET status=? where user_id=?");
         query.setBoolean(1,status);
         query.setInt(2,user_id);
@@ -347,7 +352,7 @@ public class Database {
         query.close();
     }
 
-    public static void deletePayInterface_byUserId(int user_id) throws SQLException {
+    public  void deletePayInterface_byUserId(int user_id) throws SQLException {
         PreparedStatement query = connection.prepareStatement("DELETE from payment_interface where user_id=?");
         query.setInt(1,user_id);
         query.executeUpdate();
@@ -378,17 +383,17 @@ public class Database {
         query.setInt(1,service.getCycleID());
         query.setString(2,service.getMaintenanceInformation());
         query.setInt(3,service.getEmployeeID());
-        query.setInt(4,service.getTicket());
+        query.setBoolean(4,service.getTicket());
         query.setInt(5,service.getFid());
 
         query.executeUpdate();
         query.close();
     }
 
-    public void updateTicket(int eid) throws SQLException {
-        PreparedStatement query= connection.prepareStatement("UPDATE service SET ticket=? where eid=?");
-        query.setInt(1,0);
-        query.setInt(2,eid);
+    public void closeTicket(int id) throws SQLException {
+        PreparedStatement query= connection.prepareStatement("UPDATE service SET ticket=? where id=?");
+        query.setBoolean(1,false);
+        query.setInt(2,id);
 
         query.executeUpdate();
         query.close();
@@ -402,4 +407,60 @@ public class Database {
         query.executeUpdate();
         query.close();
     }
+
+
+
+    public ResultSet getAll_Active_Services() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery("SELECT * FROM service where ticketStatus = False");
+//        ArrayList<Service> returnList = new ArrayList<>();
+//        while(resultSet.next()){
+//            Service service = new Service();
+//
+//            boolean status=resultSet.getBoolean("ticketStatus");
+//            if(status==true) continue;
+//
+//            service.setServiceId(resultSet.getInt("id"));
+//            service.setEmployeeID(resultSet.getInt("eid"));
+//            service.setCycleID(resultSet.getInt("cycle_id"));
+//            service.setFid(resultSet.getInt("fid"));
+//            service.setMaintenanceInformation(resultSet.getString("maint_info"));
+//            service.setTicket(resultSet.getBoolean("ticketStatus"));
+//            returnList.add(service);
+//        }
+
+        return resultSet;
+    }
+
+    public void getEmployeeDetials_publicInfo() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery("SELECT * FROM employee_details");
+        System.out.println("=============================Employee Details========================================\n");
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+//        System.out.println("");
+//        while(resultSet.next()){
+//            System.out.println(resultSet.getInt("eid")+" "+
+//                               resultSet.getString("name")+" "+
+//                                resultSet.getString("email")+ " "+
+//                                resultSet.getString("phone")+" "+
+//                                resultSet.getString("address"));
+//        }
+    }
+
+    public void getUserDetails_publicInfo() throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery("SELECT * FROM user_details");
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+//        System.out.println("=============================User Details========================================\n");
+//        System.out.println();
+//        while(resultSet.next()){
+//            System.out.println(resultSet.getInt("user_id")+" "+
+//                    resultSet.getString("name")+" "+
+//                    resultSet.getString("email")+ " "+
+//                    resultSet.getString("phone")+" "+
+//                    resultSet.getString("address"));
+//        }
+    }
+
+
 }

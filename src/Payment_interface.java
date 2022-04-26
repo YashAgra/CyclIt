@@ -68,7 +68,6 @@ public class Payment_interface {
 
     public static void UpdatePayInterface_status(int user_id,boolean status) throws SQLException {
         Cyclit.db.UpdatePayInter_status(user_id,status);
-
         //TODO: use triggers
     }
 

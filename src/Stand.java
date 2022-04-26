@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class Stand {
         this.cycleCount = cycleCount;
     }
 
-    static void addStand() throws IOException, SQLException {
+    public static void addStand() throws IOException, SQLException {
         System.out.println("Enter Stand Location: ");
         String address = Reader.nextLine();
         System.out.println("Enter No of Cycles on the stand: ");
@@ -48,29 +49,27 @@ public class Stand {
         Stand stand = new Stand(address,cycles);
         db.addStand(stand);
     }
-    static void getById() throws IOException, SQLException {
+    public static void getById() throws IOException, SQLException {
         System.out.println("Enter stand id: ");
         int id = Reader.nextInt();
         Stand returnStand= db.getStandById(id);
         System.out.println("Stand Info--- Id: "+ returnStand.getId()+ " Location: "+ returnStand.getLocation()+" No. of cycles Available: "+ returnStand.getCycleCount());
     }
-    static void listAll() throws IOException, SQLException{
-        ArrayList<Stand> standList = db.getAllStand();
-        for(int i=0;i<standList.size();i++){
-            System.out.println("Stand Info--- Id: "+ standList.get(i).getId()+ " Location: "+ standList.get(i).getLocation()+" No. of cycles Available: "+ standList.get(i).getCycleCount());
-        }
+    public static void listAll() throws IOException, SQLException{
+        ResultSet standList = db.getAllStand();
+        net.efabrika.util.DBTablePrinter.printResultSet(standList);
     }
-    public void updateStandCycles(int cycleCount) throws IOException, SQLException{
+    public  void updateStandCycles(int cycleCount) throws IOException, SQLException{
         Stand stand = db.getStandById(this.id);
         stand.cycleCount = this.cycleCount;
         db.updateStandCycles(stand);
-        }
+    }
 
-    static void deleteStand() throws SQLException, IOException {
+    public static void deleteStand() throws SQLException, IOException {
         System.out.println("Enter Stand ID to delete: ");
         int id = Reader.nextInt();
         db.deleteStand(id);
-        }
-
     }
+
+}
 
