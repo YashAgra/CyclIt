@@ -159,18 +159,7 @@ public class Cyclit {
     private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
         User user = User.getfromdb(userid, pass);
         if(user!=null) {
-            System.out.println("Welcome " + user.getName() + "\n");
-//            for (int i = 0; i < standList.size(); i++) {
-//                Stand stand = standList.get(i);
-//                System.out.print("  ");
-//                System.out.print(stand.getId());
-//                System.out.print("    |");
-//                System.out.print(stand.getLocation());
-//                int z = stand.getLocation().length();
-//                System.out.print(" ".repeat(41 - z) + "|");
-//                System.out.println(stand.getCycleCount());
-//
-//            }
+
             while(true) {
                 System.out.println("Welcome " + user.getName() + "\n");
                 System.out.println("===================================================");
@@ -180,8 +169,10 @@ public class Cyclit {
                 switch (id) {
                     case 1:
                         bookCycle(user);
+                        break;
                     case 2:
                         displayMenu(user);
+                        break;
                     case 3:
                         flag=1;
                         break;
@@ -196,20 +187,24 @@ public class Cyclit {
     }
 
     private static void displayMenu(User user) throws IOException, SQLException {
-        System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n else enter -1 to leave \n");
         System.out.println();
         while (true) {
+            System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n else enter -1 to leave \n");
             int displayid = Reader.nextInt();
             int flag = 0;
             switch (displayid) {
                 case 1:
                     feedback(user);
+                    break;
                 case 2:
                     viewUserDetails(user);
+                    break;
                 case 3:
                     triphistory(user);
+                    break;
                 case 4:
                     wallet(user);
+                    break;
                 case -1:
                     flag = 1;
                     break;
@@ -237,12 +232,14 @@ public class Cyclit {
 //        System.out.println("===============================================================================================");
 //        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
 //        System.out.println("===============================================================================================");
+        System.out.println("===================================================================================================");
+        System.out.println("current Details\n");
         user.viewUser();
         User.updatedb(userid); //update user ID function
 //        System.out.println("===============================================================================================");
 //        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
 //        System.out.println("===============================================================================================");
-        System.out.println("Updated Details are: ");
+        System.out.println("Updated Details are: \n");
         User.getfromdb(userid).viewUser();
     }
 
@@ -259,6 +256,9 @@ public class Cyclit {
                 System.out.println("Enter Amount: ");
                 int amount = Reader.nextInt();
                 Payment_interface.addPayInterface(user.getUserID(),amount,true);
+
+                //TODO get payment id for further searching into the table otherwise giving error
+
                 System.out.println("Confirm Amount (Y/N) : ");
                 String con = Reader.nextLine();
                 if(con.equals("Y") || con.equals("y")){
@@ -285,10 +285,11 @@ public class Cyclit {
 
     private static void viewUserDetails(User user) throws SQLException, IOException {
         int i = user.getUserID();
-        System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
-        int viewUserDetailMenu = Reader.nextInt();
+//        System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
         int flag = 0;
         while (true) {
+            System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
+            int viewUserDetailMenu = Reader.nextInt();
             switch (viewUserDetailMenu) {
                 case 1:
                     User.getfromdb(i);

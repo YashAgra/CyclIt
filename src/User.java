@@ -127,7 +127,6 @@ public class User {
             System.out.println("3. Change PhoneNumber");
             System.out.println("4. Change Password");
             System.out.println("5. exit");
-
             i = Reader.nextInt();
             if(i==1){
                 System.out.println("Name : ");
