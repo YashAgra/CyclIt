@@ -62,12 +62,15 @@ public class Cyclit {
             String sub_email = userid.substring(index, userid.length());
             if (sub_email.equals("@cyclit.in")) {
                 isEmployee = true;
+
             }
+
             break;
 
         }
         if(isEmployee){
             its_a_employee(userid,pass);
+            return;
         }
 
         its_a_user(userid,pass);
@@ -75,96 +78,152 @@ public class Cyclit {
     }
 
     private static void its_a_employee(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
+        System.out.println("in employee\n");
         Employee emp=Employee.getfromdb(userid,pass);
         if(emp==null){
             System.out.println("--------Wrong details try again------------\n");
+            return;
         }
         int emp_id=emp.getEmployeeId();
         String type=emp.getType();
-        if(type=="HR"){
+        if(type.equals("HR")){
             is_HR(emp);
         }
-        else if(type=="CycleManager"){
+        else if(type.equals("CycleManager")){
             is_cycleManager(emp);
         }
-        else if(type=="Service"){
+        else if(type.equals("Service")){
             is_serviceMan(emp);
         }
-        else if(type=="PR"){
+        else if(type.equals("PR")){
             is_PRman(emp);
         }
+        System.out.println("returned from employee\n");
     }
 
     private static void is_HR(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee \n 4. Find Employees who are customers also 5. Average Salary of each department by types \n 6. Total asset earned and value created in cyclit" );
-        int whatToDo=Reader.nextInt();
-        if(whatToDo==1){
-            Employee.addtodb();
-        }else if(whatToDo==2){
-            Employee.updatedb();
+        while(true) {
+            System.out.println("1. Add Employee \n2. Edit Employee  \n3. Delete employee \n4. Find Employees who are customers also \n5. Average Salary of each department by types \n6. Total asset earned and value created in cyclit \n7.Show all Employee\n8. logout");
+            int whatToDo = Reader.nextInt();
+            if (whatToDo == 1) {
+                Employee.addtodb();
+            } else if (whatToDo == 2) {
+                Employee.updatedb();
+            } else if (whatToDo == 3) {
+                Employee.deletefromdb();
+            } else if (whatToDo == 4) {
+                Cyclit.db.employeeIntersectCustomer();
+            } else if (whatToDo == 5) {
+                Cyclit.db.averageSalaryofEmployeeTypes();
+            } else if (whatToDo == 6) {
+                db.totalAssetOfCyclit();
+            }
+            else if (whatToDo == 7) {
+                db.getEmployeeDetials_publicInfo();
+            }
+            else{
+                break;
+            }
         }
-        else if(whatToDo==3){
-            Employee.deletefromdb();
-        }
-        else if(whatToDo==4){
-            Cyclit.db.employeeIntersectCustomer();
-        }
-
-        else if(whatToDo==5){
-            Cyclit.db.averageSalaryofEmployeeTypes();
-        }
-        else if(whatToDo==6){
-            db.totalAssetOfCyclit();
-        }
-
     }
 
     private static void is_cycleManager(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Services \n9. All Feedbacks that were taken from Service \n10. Average cycle user time of user\n 11. List of Services Closed by Employee");
-        int whatToDo=Reader.nextInt();
-        switch(whatToDo){
-            case 1: Service.closeTicket();
-            case 2: Stand.deleteStand();
-            case 3: Stand.addStand();
-            case 4: Cycle.addCycle();
-            case 5: Cycle.deleteCyclefromdb();
-            case 6: Cycle.listAllCycle();
-            case 7: Stand.listAll();
-            case 8: getAllService();
-            case 9: db.feedbackToService();
-            case 10: db.averageCycleUserTime();
-            case 11: db.ListOfServicesClosedbyEmployee();
-            case -1: break;
+        while(true) {
+            boolean flag=false;
+            System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n6.Get All Cycles \n7.Get All Stands \n8.Get All Services \n9.Add Service \n10. All Feedbacks that were taken from Service \n11. Average cycle user time of user\n12. List of Services Closed by Employee \n-1. Logout");
+            int whatToDo = Reader.nextInt();
+            switch (whatToDo) {
+                case 1:
+                    Service.closeTicket();
+                    break;
+                case 2:
+                    Stand.deleteStand();
+                    break;
+                case 3:
+                    Stand.addStand();
+                    break;
+                case 4:
+                    Cycle.addCycle();
+                    break;
+                case 5:
+                    Cycle.deleteCyclefromdb();
+                    break;
+                case 6:
+                    Cycle.listAllCycle();
+                    break;
+                case 7:
+                    Stand.listAll();
+                    break;
+                case 8:
+                    getAllService();
+                    break;
+                case 9:
+                    Service.addService();
+                    break;
+                case 10:
+                    db.feedbackToService();
+                    break;
+                case 11:
+                    db.averageCycleUserTime();
+                    break;
+                case 12:
+                    db.ListOfServicesClosedbyEmployee();
+                    break;
+                case -1:
+                    flag=true;
+                    break;
+            }
+            if(flag) break;
         }
     }
 
 
     private static void is_PRman(Employee emp) throws IOException, SQLException {
-        System.out.println("1. Get Employee Details \n2. Get User Details\n 3. Complete list details \n 4. Users who have spend more than certain Value \n 5. Users who have used every cycle \n 6. Count number of services for users which were taken by feedback \n -1 Exit \n" );
-        int whatToDo=Reader.nextInt();
-        switch(whatToDo){
-            case 1: db.getEmployeeDetials_publicInfo();
-            case 2: db.getUserDetails_publicInfo();
-            case 3: db.completeUserData();
-            case 4: db.averageSpendGreaterThanAmount();
-            case 5: db.usersWithEveryCycle();
-            case 6: db.countServiceConversionFromFeebackByUser();
-            case -1: break;
+        while(true) {
+            int flag = 0;
+            System.out.println("1. Get Employee Details \n2. Get User Details\n3. Complete list details \n4. Users who have spend more than certain Value \n5. Users who have used every cycle \n6. Count number of services for users which were taken by feedback \n-1 Logout \n");
+            int whatToDo = Reader.nextInt();
+            switch (whatToDo) {
+                case 1:
+                    db.getEmployeeDetials_publicInfo();
+                    break;
+                case 2:
+                    db.getUserDetails_publicInfo();
+                    break;
+                case 3:
+                    db.completeUserData();
+                    break;
+                case 4:
+                    db.averageSpendGreaterThanAmount();
+                    break;
+                case 5:
+                    db.usersWithEveryCycle();
+                    break;
+                case 6:
+                    db.countServiceConversionFromFeebackByUser();
+                    break;
+                case -1:
+                    flag = 1;
+                    break;
+            }
+            if(flag==1) break;
         }
     }
 
     private static void is_serviceMan(Employee emp) throws IOException, SQLException {
-        System.out.println("1. Get all services \n2. CLose service \n -1.exit");
-        int whatToDo=Reader.nextInt();
-        if(whatToDo==1){
-            getAllService();
+        while(true) {
+
+            System.out.println("1. Get all services \n2. CLose service \n-1.logout");
+            int whatToDo = Reader.nextInt();
+            if (whatToDo == 1) {
+                getAllService();
+            } else if (whatToDo == 2) {
+                Service.closeTicket();
+            } else {
+                break;
+            }
         }
-        else if(whatToDo==2){
-            Service.closeTicket();
-        }
-        else{
-            //nothing;
-        }
+
     }
 
     private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {

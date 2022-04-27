@@ -152,14 +152,14 @@ public class Employee {
 
     public static Employee getfromdb(String email, String pass) throws SQLException, ClassNotFoundException {
         Database db = Cyclit.db;
-        PreparedStatement query = Database.connection.prepareStatement("SELECT user_id FROM employee where email = ? and password = ?");
+        PreparedStatement query = Database.connection.prepareStatement("SELECT eid FROM employee where email = ? and password = ?");
         query.setString(1, email);
         query.setString(2, pass);
         ResultSet resultSet = query.executeQuery();
-        if(resultSet == null)
+        if(resultSet.next()==false)
             return null;
         else{
-            resultSet.next();
+            //resultSet.next();
             int id = resultSet.getInt("eid");
             Employee emp = Employee.getfromdb(id);
             return emp;
