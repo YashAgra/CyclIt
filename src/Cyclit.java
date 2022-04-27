@@ -1,9 +1,13 @@
+import com.mysql.cj.x.protobuf.MysqlxPrepare;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +29,13 @@ public class Cyclit {
 
 
 
-
+    private static int toMins(String s) {
+        String[] hourMin = s.split(":");
+        int hour = Integer.parseInt(hourMin[0]);
+        int mins = Integer.parseInt(hourMin[1]);
+        int hoursInMins = hour * 60;
+        return hoursInMins + mins;
+    }
     public static void login() throws IOException, SQLException, ClassNotFoundException {
 
         //enter user and pass
@@ -159,20 +169,23 @@ public class Cyclit {
     private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
         User user = User.getfromdb(userid, pass);
         if(user!=null) {
-            System.out.println("Welcome " + user.getName() + "\n");
-            System.out.println("===================================================");
-//
+
             while(true) {
-                System.out.println("1. Book a bike \n2. End a ride \n3.Check menu options \n4. Logout");
+                System.out.println("Welcome " + user.getName() + "\n");
+                System.out.println("===================================================");
+                System.out.println("1. Book a bike \n 2. End Ride \n3. Check menu options \n4. Logout");
                 int id = Reader.nextInt();
                 int flag = 0;
                 switch (id) {
                     case 1:
                         bookCycle(user);
+                        break;
                     case 2:
                         endRide(user);
+                        break;
                     case 3:
                         displayMenu(user);
+                        break;
                     case 4:
                         flag=1;
                         break;
@@ -187,20 +200,24 @@ public class Cyclit {
     }
 
     private static void displayMenu(User user) throws IOException, SQLException {
-        System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n else enter -1 to leave \n");
         System.out.println();
         while (true) {
+            System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n else enter -1 to leave \n");
             int displayid = Reader.nextInt();
             int flag = 0;
             switch (displayid) {
                 case 1:
                     feedback(user);
+                    break;
                 case 2:
                     viewUserDetails(user);
+                    break;
                 case 3:
                     triphistory(user);
+                    break;
                 case 4:
                     wallet(user);
+                    break;
                 case -1:
                     flag = 1;
                     break;
@@ -224,6 +241,10 @@ public class Cyclit {
     private static void updateUserDetails(User user) throws IOException, SQLException {
 //        System.out.println("Update User Details, Please note the options here :");
         int userid = user.getUserID();
+
+
+        System.out.println("===================================================================================================");
+        System.out.println("current Details\n");
         user.viewUser();
         User.updatedb(userid); //update user ID function
         System.out.println("Updated Details are: ");
@@ -269,13 +290,13 @@ public class Cyclit {
 
     private static void viewUserDetails(User user) throws SQLException, IOException {
         int i = user.getUserID();
-        System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
-        int viewUserDetailMenu = Reader.nextInt();
+//        System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
         int flag = 0;
         while (true) {
+            System.out.println("1. View User details \n 2. Update user details \n Enter -1 for breaking! ");
+            int viewUserDetailMenu = Reader.nextInt();
             switch (viewUserDetailMenu) {
                 case 1:
-                    User.getfromdb(i);
                     user.viewUser();
                     break;
                 case 2:
@@ -321,7 +342,7 @@ public class Cyclit {
             System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
             int i = Reader.nextInt();
 
-                //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
+
 
             if(i==1){
                 login();
@@ -342,28 +363,36 @@ public class Cyclit {
          */
     }
     public static void endRide(User user) throws SQLException, IOException {
+        int destStand;
+        System.out.println("Choose the stand on which you want to park the bike: ");
+        Stand.listAll();
+        destStand = Reader.nextInt();
         OngoingRides ride = OngoingRides.getfromdb(user.getUserID());
-        int payment = generatePayment(ride.getOutTime());
+        int payment = generatePayment(ride);
         Payment_interface.addPayInterface(user.getUserID(),payment, false);
         System.out.println("Confirm Amount (Y/N) : ");
         String con = Reader.nextLine();
         if(con.equals("Y") || con.equals("y")){
+            PreparedStatement query = Database.connection.prepareStatement("call addtriphistory(?,?);");
+            query.setInt(1,destStand );
+            query.setInt(2, user.getUserID());
+            query.executeUpdate();
             Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
-            //Payment_interface.deletePayInterface_byUserId(user.getUserID());
-
-            User.updatewalletMoney(user);
-            user = User.getfromdb(user.getUserID());
+            Payment_interface.deletePayInterface_byUserId(user.getUserID());
+//            user = User.getfromdb(user.getUserID());
         }
         else {
             System.out.println("Invalid Input (Try Again)");
-            continue;
         }
 
 
     }
 
-    private static int generatePayment(String outTime) {
-        return 0;
+    private static int generatePayment(OngoingRides ride) throws SQLException {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+        int totalTime = toMins(ride.getOutTime()) - toMins(sdf.format(cal.getTime()));
+        return totalTime;
     }
 
     //-------------------------Cycle--------------------------------------------------------

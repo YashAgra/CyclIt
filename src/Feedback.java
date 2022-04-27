@@ -41,7 +41,8 @@ public class Feedback {
         String feedback=Reader.nextLine();
         feed.feedback=feedback;
         Cyclit.db.addFeedBack(feed);
-        System.out.println("Thank you for your feedback! We will communicate with you and make the necessary improvements");
+        System.out.println("Thank you for your feedback! We will communicate with you and make the necessary improvements\n");
+        return;
     }
 
     public static ArrayList<Feedback> getAllFeedback() throws SQLException {
