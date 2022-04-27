@@ -86,7 +86,7 @@ public class Cyclit {
     }
 
     private static void is_HR(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee");
+        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee \n 4. Find Employees who are customers also 5. Average Salary of each department by types \n 6. Total asset earned and value created in cyclit" );
         int whatToDo=Reader.nextInt();
         if(whatToDo==1){
             Employee.addtodb();
@@ -96,10 +96,21 @@ public class Cyclit {
         else if(whatToDo==3){
             Employee.deletefromdb();
         }
+        else if(whatToDo==4){
+            Cyclit.db.employeeNaturalJoinCustomer();
+        }
+
+        else if(whatToDo==5){
+            Cyclit.db.averageSalaryofEmployeeTypes();
+        }
+        else if(whatToDo==6){
+            db.totalAssetOfCyclit();
+        }
+
     }
 
     private static void is_cycleManager(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Servies");
+        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Services \n9. All Feedbacks that were taken from Service \n10. Average cycle user time of user");
         int whatToDo=Reader.nextInt();
         switch(whatToDo){
             case 1: Service.closeTicket();
@@ -110,15 +121,24 @@ public class Cyclit {
             case 6: Cycle.listAllCycle();
             case 7: Stand.listAll();
             case 8: getAllService();
+            case 9: db.feedbackToService();
+            case 10: db.averageCycleUserTime();
+            case -1: break;
         }
     }
 
+
     private static void is_PRman(Employee emp) throws IOException, SQLException {
-        System.out.println("1. Get Employee Details \n2. Get User Details\n");
+        System.out.println("1. Get Employee Details \n2. Get User Details\n 3. Complete list details \n 4. Users who have spend more than certain Value \n 5. Users who have used every cycle \n 6. Count number of services for users which were taken by feedback \n -1 Exit \n" );
         int whatToDo=Reader.nextInt();
         switch(whatToDo){
             case 1: db.getEmployeeDetials_publicInfo();
             case 2: db.getUserDetails_publicInfo();
+            case 3: db.completeUserData();
+            case 4: db.averageSpendGreaterThanAmount();
+            case 5: db.usersWithEveryCycle();
+            case 6: db.countServiceConversionFromFeebackByUser();
+            case -1: break;
         }
     }
 
@@ -130,7 +150,6 @@ public class Cyclit {
         }
         else if(whatToDo==2){
             Service.closeTicket();
-
         }
         else{
             //nothing;
@@ -138,7 +157,7 @@ public class Cyclit {
     }
 
     private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
-        User user =User.getfromdb(userid, pass);
+        User user = User.getfromdb(userid, pass);
         if(user!=null) {
             System.out.println("Welcome " + user.getName() + "\n");
 //            for (int i = 0; i < standList.size(); i++) {
@@ -289,9 +308,9 @@ public class Cyclit {
         Feedback.addFeedBack(user.getUserID());
     }
 
+
     private static void bookCycle(User user) throws IOException, SQLException, ClassNotFoundException {
           Stand.listAll();
-            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();
