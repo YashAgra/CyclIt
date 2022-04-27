@@ -467,6 +467,22 @@ public class Database {
     //10 Queries start from Here !
 
     //<Start with HR>
+    public void averageCycleUserTime() throws SQLException {
+        System.out.println("Greetings Cycle Manager! This is the average time each cycle is being used");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add SQL
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+    }
+
+    public void totalAssetOfCyclit() throws SQLException {
+        /* list of assets of Cyclit */
+
+        System.out.println("Greetings HR! This is the total assets (wallet + payments) of total Cyclit application!");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add SQL
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+    }
+
     public void employeeNaturalJoinCustomer() throws SQLException {
         /* List all the employees who uses our app as a customer */
 
@@ -487,9 +503,7 @@ public class Database {
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
 
     }
-
     //<HR queries end>
-
 
     //<PR Team queries begin>
     public void completeUserData () throws SQLException {
@@ -556,7 +570,8 @@ public class Database {
 
     // <Cycle Manager Queries begin>
 
-    // TODO 1 query left that will be inputed in user trip history function. Number of queries left to write = 3
+    // TODO 1 query left that will be inputted in user trip history function. Number of queries left to write = 3
 
     //Changes made
+
 }

@@ -84,7 +84,7 @@ public class Cyclit {
     }
 
     private static void is_HR(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee \n 4. Find Employees who are customers also 5. Average Salary of each department by types \n" );
+        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee \n 4. Find Employees who are customers also 5. Average Salary of each department by types \n 6. Total asset earned and value created in cyclit" );
         int whatToDo=Reader.nextInt();
         if(whatToDo==1){
             Employee.addtodb();
@@ -101,11 +101,14 @@ public class Cyclit {
         else if(whatToDo==5){
             Cyclit.db.averageSalaryofEmployeeTypes();
         }
+        else if(whatToDo==6){
+            db.totalAssetOfCyclit();
+        }
 
     }
 
     private static void is_cycleManager(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Services \n9. All Feedbacks that were taken from Service \n");
+        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Services \n9. All Feedbacks that were taken from Service \n10. Average cycle user time of user");
         int whatToDo=Reader.nextInt();
         switch(whatToDo){
             case 1: Service.closeTicket();
@@ -117,6 +120,7 @@ public class Cyclit {
             case 7: Stand.listAll();
             case 8: getAllService();
             case 9: db.feedbackToService();
+            case 10: db.averageCycleUserTime();
         }
     }
 
