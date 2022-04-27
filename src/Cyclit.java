@@ -110,7 +110,7 @@ public class Cyclit {
     }
 
     private static void is_cycleManager(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Services \n9. All Feedbacks that were taken from Service \n10. Average cycle user time of user");
+        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Services \n9. All Feedbacks that were taken from Service \n10. Average cycle user time of user\n 11. List of Services Closed by Employee");
         int whatToDo=Reader.nextInt();
         switch(whatToDo){
             case 1: Service.closeTicket();
@@ -123,6 +123,7 @@ public class Cyclit {
             case 8: getAllService();
             case 9: db.feedbackToService();
             case 10: db.averageCycleUserTime();
+            case 11: db.ListOfServicesClosedbyEmployee();
             case -1: break;
         }
     }
