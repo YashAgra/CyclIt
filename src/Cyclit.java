@@ -4,7 +4,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.StringTokenizer;
 
 public class Cyclit {
@@ -157,19 +159,7 @@ public class Cyclit {
     private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
         User user = User.getfromdb(userid, pass);
         if(user!=null) {
-//            System.out.println("Welcome " + user.getName() + "\n");
-//            for (int i = 0; i < standList.size(); i++) {
-//                Stand stand = standList.get(i);
-//                System.out.print("  ");
-//                System.out.print(stand.getId());
-//                System.out.print("    |");
-//                System.out.print(stand.getLocation());
-//                int z = stand.getLocation().length();
-//                System.out.print(" ".repeat(41 - z) + "|");
-//                System.out.println(stand.getCycleCount());
-//
-//                //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
-//            }
+
             while(true) {
                 System.out.println("Welcome " + user.getName() + "\n");
                 System.out.println("===================================================");
@@ -319,24 +309,20 @@ public class Cyclit {
         Feedback.addFeedBack(user.getUserID());
     }
 
-    private static void bookCycle(User user) throws IOException, SQLException {
-        Stand.listAll();
-//        ArrayList<Stand> standList = db.getAllStand();
-//        for (int i = 0; i < standList.size(); i++) {
-//            Stand stand = standList.get(i);
-//            System.out.print("  ");
-//            System.out.print(stand.getId());
-//            System.out.print("    |");
-//            System.out.print(stand.getLocation());
-//            int z = stand.getLocation().length();
-//            System.out.print(" ".repeat(41 - z) + "|");
-//            System.out.println(stand.getCycleCount());
-//
-//            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
-//        }
+
+    private static void bookCycle(User user) throws IOException, SQLException, ClassNotFoundException {
+          Stand.listAll();
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();
+        System.out.println("Select a cycle from the list below: \n");
+        Cycle.listAllCycle(standId);
+        int cid = Reader.nextInt();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+        OngoingRides ride = new OngoingRides(uid,cid, standId, sdf.format(cal.getTime()));
+        db.addOngoingRides(ride);
+        System.out.println("Cycle booked successfully");
 
     }
 
@@ -351,7 +337,7 @@ public class Cyclit {
             System.out.println("Welcome to Cyclit \n 1. Login\n 2. Register\n 3. Quit\n");
             int i = Reader.nextInt();
 
-                //TODO CHECK THE BUG : REGISTER OPTION BECOMES ACTIVE AUTOMATICALLY
+
 
             if(i==1){
                 login();
@@ -370,6 +356,9 @@ public class Cyclit {
         login() function
         register(){ addUser }
          */
+    }
+    public void endRide(){
+
     }
 
     //-------------------------Cycle--------------------------------------------------------
