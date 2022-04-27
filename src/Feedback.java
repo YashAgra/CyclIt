@@ -34,15 +34,14 @@ public class Feedback {
     }
 
 
-
     public static void addFeedBack(int user_id) throws IOException, SQLException {
         Feedback feed=new Feedback();
         feed.user_id=user_id;
         System.out.println("Enter FeedBack:");
         String feedback=Reader.nextLine();
         feed.feedback=feedback;
-
         Cyclit.db.addFeedBack(feed);
+        System.out.println("Thank you for your feedback! We will communicate with you and make the necessary improvements");
     }
 
     public static ArrayList<Feedback> getAllFeedback() throws SQLException {
