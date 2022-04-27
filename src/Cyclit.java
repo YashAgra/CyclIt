@@ -138,7 +138,6 @@ public class Cyclit {
         User user =User.getfromdb(userid, pass);
         if(user!=null) {
             System.out.println("Welcome " + user.getName() + "\n");
-            Stand.listAll();
 //            for (int i = 0; i < standList.size(); i++) {
 //                Stand stand = standList.get(i);
 //                System.out.print("  ");
@@ -281,19 +280,20 @@ public class Cyclit {
     }
 
     private static void bookCycle(User user) throws IOException, SQLException {
-        ArrayList<Stand> standList = db.getAllStand();
-        for (int i = 0; i < standList.size(); i++) {
-            Stand stand = standList.get(i);
-            System.out.print("  ");
-            System.out.print(stand.getId());
-            System.out.print("    |");
-            System.out.print(stand.getLocation());
-            int z = stand.getLocation().length();
-            System.out.print(" ".repeat(41 - z) + "|");
-            System.out.println(stand.getCycleCount());
-
-            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
-        }
+        Stand.listAll();
+//        ArrayList<Stand> standList = db.getAllStand();
+//        for (int i = 0; i < standList.size(); i++) {
+//            Stand stand = standList.get(i);
+//            System.out.print("  ");
+//            System.out.print(stand.getId());
+//            System.out.print("    |");
+//            System.out.print(stand.getLocation());
+//            int z = stand.getLocation().length();
+//            System.out.print(" ".repeat(41 - z) + "|");
+//            System.out.println(stand.getCycleCount());
+//
+//            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
+//        }
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();
