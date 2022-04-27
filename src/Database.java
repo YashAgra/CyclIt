@@ -176,7 +176,7 @@ public class Database {
     }
 
     public void addOngoingRides(OngoingRides ride) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("Insert Into OngoigRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("Insert Into OngoingRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
         query.setInt(1,ride.getUSerID());
         query.setInt(2,ride.getCycleID());
         query.setInt(3,ride.getStandID());
@@ -186,16 +186,16 @@ public class Database {
 
     }
 
-    public void deleteOngoigRides(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("Delete from OngoigRides where UserID = ?");
+    public void deleteOngoingRides(int id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("Delete from OngoingRides where UserID = ?");
         query.setInt(1,id);
         query.executeQuery();
         query.close();
     }
 
-    public OngoingRides getOngoigRides(int id) throws SQLException {
+    public OngoingRides getOngoingRides(int id) throws SQLException {
         OngoingRides ride = new OngoingRides();
-        PreparedStatement query = connection.prepareStatement("Select * from OngoigRides where UserId = ?");
+        PreparedStatement query = connection.prepareStatement("Select * from OngoingRides where UserId = ?");
         query.setInt(1,id);
         ResultSet resultSet = query.executeQuery();
         ride.setUSerID(resultSet.getInt("UserID"));
@@ -274,22 +274,21 @@ public class Database {
     }
 
     //Get all cycles on a stand
-    public static ArrayList<Cycle> getAllCycle(int sid) throws SQLException, ClassNotFoundException {
-        PreparedStatement query = connection.prepareStatement("SELECT * FROM CYCLE WHERE stand_id = ?");
+    public static ResultSet getAllCycle(int sid) throws SQLException, ClassNotFoundException {
+        PreparedStatement query = connection.prepareStatement("SELECT cycle_id, model_no FROM CYCLE WHERE stand_id = ?");
         query.setInt(1,sid);
         ResultSet resultSet = query.executeQuery();
-        ArrayList<Cycle> returnList = new ArrayList<>();
-        while(resultSet.next()){
-            Cycle cycle = new Cycle();
-            cycle.setCycle_id(resultSet.getInt("cycle_id"));
-            cycle.setCycle_qr((resultSet.getString("cycle_qr")));
-            cycle.setInUse(resultSet.getBoolean("inUse"));
-            cycle.setStand_id(resultSet.getInt("stand_id"));
-            cycle.setInRepair(resultSet.getBoolean("InRepair"));
-            cycle.setModel_no(resultSet.getString("model_no"));
-            returnList.add(cycle);
-        }
-        return returnList;
+//        ArrayList<Cycle> returnList = new ArrayList<>();
+//        while(resultSet.next()){
+//            Cycle cycle = new Cycle();
+//            cycle.setCycle_id(resultSet.getInt("cycle_id"));
+//            cycle.setCycle_qr((resultSet.getString("cycle_qr")));
+//            cycle.setInUse(resultSet.getBoolean("inUse"));
+//            cycle.setStand_id(resultSet.getInt("stand_id"));
+//            cycle.setInRepair(resultSet.getBoolean("InRepair"));
+//            cycle.setModel_no(resultSet.getString("model_no"));
+//            returnList.add(cycle);
+        return resultSet;
     }
 
     public void deleteCycle(int cid) throws SQLException {
@@ -467,12 +466,28 @@ public class Database {
     //10 Queries start from Here !
 
     //<Start with HR>
+    public void averageCycleUserTime() throws SQLException {
+        System.out.println("Greetings Cycle Manager! This is the average time each cycle is being used");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add SQL
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+    }
+
+    public void totalAssetOfCyclit() throws SQLException {
+        /* list of assets of Cyclit */
+
+        System.out.println("Greetings HR! This is the total assets (wallet + payments) of total Cyclit application!");
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add SQL
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+        //asset value
+    }
+
     public void employeeIntersectCustomer() throws SQLException {
         /* List all the employees who uses our app as a customer */
 
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery("select user.name, user.phone, user.email, user.address from user " +
-                                                     "inner join employee on employee.email = user.email");
+        ResultSet resultSet = query.executeQuery(""); // TODO add sql
         System.out.println("Greetings HR! This is the list of all employees who use our application as a customer : ");
         /*select user.name, user.phone , user.email, user.address from user
         inner join employee on employee.eid = user.user_id; */
@@ -488,9 +503,7 @@ public class Database {
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
 
     }
-
     //<HR queries end>
-
 
     //<PR Team queries begin>
     public void completeUserData () throws SQLException {
@@ -498,7 +511,7 @@ public class Database {
         Statement query = connection.createStatement();
         System.out.println("Greetings PR! This is the list of all the users : This list is for both employee and users, and does not have any duplicates");
 
-        ResultSet resultSet = query.executeQuery("SELECT name, address, email, phone FROM user UNION select name, address,email, phone from employee;");
+        ResultSet resultSet = query.executeQuery("SELECT name, address, email, phone FROM user UNION select name, address,email, phone from employee;"); // TODO add sql
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
 
     }
@@ -557,7 +570,8 @@ public class Database {
 
     // <Cycle Manager Queries begin>
 
-    // TODO 1 query left that will be inputed in user trip history function. Number of queries left to write = 3
+    // TODO 1 query left that will be inputted in user trip history function. Number of queries left to write = 3
 
     //Changes made
+
 }

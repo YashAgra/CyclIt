@@ -4,7 +4,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.StringTokenizer;
 
 public class Cyclit {
@@ -84,7 +86,7 @@ public class Cyclit {
     }
 
     private static void is_HR(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee \n 4. Find Employees who are customers also 5. Average Salary of each department by types \n" );
+        System.out.println("1. Add Employee \n2. Edit Employee  \n 3. Delete employee \n 4. Find Employees who are customers also 5. Average Salary of each department by types \n 6. Total asset earned and value created in cyclit" );
         int whatToDo=Reader.nextInt();
         if(whatToDo==1){
             Employee.addtodb();
@@ -101,11 +103,14 @@ public class Cyclit {
         else if(whatToDo==5){
             Cyclit.db.averageSalaryofEmployeeTypes();
         }
+        else if(whatToDo==6){
+            db.totalAssetOfCyclit();
+        }
 
     }
 
     private static void is_cycleManager(Employee emp) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Services \n9. All Feedbacks that were taken from Service \n");
+        System.out.println("1. Close Service \n2.Delete Stand \n3.Add Stand \n4.Add Cycle \n5.Delete Cycle \n 6.Get All Cycles \n 7.Get All Stands \n8.Get All Services \n9. All Feedbacks that were taken from Service \n10. Average cycle user time of user");
         int whatToDo=Reader.nextInt();
         switch(whatToDo){
             case 1: Service.closeTicket();
@@ -117,6 +122,8 @@ public class Cyclit {
             case 7: Stand.listAll();
             case 8: getAllService();
             case 9: db.feedbackToService();
+            case 10: db.averageCycleUserTime();
+            case -1: break;
         }
     }
 
@@ -152,19 +159,21 @@ public class Cyclit {
     private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
         User user = User.getfromdb(userid, pass);
         if(user!=null) {
-//                //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
             System.out.println("Welcome " + user.getName() + "\n");
             System.out.println("===================================================");
+//
             while(true) {
-                System.out.println("1. Book a bike \n2. Check menu options \n3. Logout");
+                System.out.println("1. Book a bike \n2. End a ride \n3.Check menu options \n4. Logout");
                 int id = Reader.nextInt();
                 int flag = 0;
                 switch (id) {
                     case 1:
                         bookCycle(user);
                     case 2:
-                        displayMenu(user);
+                        endRide(user);
                     case 3:
+                        displayMenu(user);
+                    case 4:
                         flag=1;
                         break;
                 }
@@ -215,15 +224,8 @@ public class Cyclit {
     private static void updateUserDetails(User user) throws IOException, SQLException {
 //        System.out.println("Update User Details, Please note the options here :");
         int userid = user.getUserID();
-
-//        System.out.println("===============================================================================================");
-//        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-//        System.out.println("===============================================================================================");
         user.viewUser();
         User.updatedb(userid); //update user ID function
-//        System.out.println("===============================================================================================");
-//        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-//        System.out.println("===============================================================================================");
         System.out.println("Updated Details are: ");
         User.getfromdb(userid).viewUser();
     }
@@ -274,6 +276,7 @@ public class Cyclit {
             switch (viewUserDetailMenu) {
                 case 1:
                     User.getfromdb(i);
+                    user.viewUser();
                     break;
                 case 2:
                     updateUserDetails(user);
@@ -290,24 +293,20 @@ public class Cyclit {
         Feedback.addFeedBack(user.getUserID());
     }
 
-    private static void bookCycle(User user) throws IOException, SQLException {
-        Stand.listAll();
-//        ArrayList<Stand> standList = db.getAllStand();
-//        for (int i = 0; i < standList.size(); i++) {
-//            Stand stand = standList.get(i);
-//            System.out.print("  ");
-//            System.out.print(stand.getId());
-//            System.out.print("    |");
-//            System.out.print(stand.getLocation());
-//            int z = stand.getLocation().length();
-//            System.out.print(" ".repeat(41 - z) + "|");
-//            System.out.println(stand.getCycleCount());
-//
-//            //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
-//        }
+
+    private static void bookCycle(User user) throws IOException, SQLException, ClassNotFoundException {
+          Stand.listAll();
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();
+        System.out.println("Select a cycle from the list below: \n");
+        Cycle.listAllCycle(standId);
+        int cid = Reader.nextInt();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+        OngoingRides ride = new OngoingRides(uid,cid, standId, sdf.format(cal.getTime()));
+        db.addOngoingRides(ride);
+        System.out.println("Cycle booked successfully");
 
     }
 
@@ -341,6 +340,30 @@ public class Cyclit {
         login() function
         register(){ addUser }
          */
+    }
+    public static void endRide(User user) throws SQLException, IOException {
+        OngoingRides ride = OngoingRides.getfromdb(user.getUserID());
+        int payment = generatePayment(ride.getOutTime());
+        Payment_interface.addPayInterface(user.getUserID(),payment, false);
+        System.out.println("Confirm Amount (Y/N) : ");
+        String con = Reader.nextLine();
+        if(con.equals("Y") || con.equals("y")){
+            Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
+            //Payment_interface.deletePayInterface_byUserId(user.getUserID());
+
+            User.updatewalletMoney(user);
+            user = User.getfromdb(user.getUserID());
+        }
+        else {
+            System.out.println("Invalid Input (Try Again)");
+            continue;
+        }
+
+
+    }
+
+    private static int generatePayment(String outTime) {
+        return 0;
     }
 
     //-------------------------Cycle--------------------------------------------------------
