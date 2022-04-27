@@ -483,7 +483,7 @@ public class Database {
         //asset value
     }
 
-    public void employeeNaturalJoinCustomer() throws SQLException {
+    public void employeeIntersectCustomer() throws SQLException {
         /* List all the employees who uses our app as a customer */
 
         Statement query = connection.createStatement();

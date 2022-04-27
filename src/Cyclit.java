@@ -1,9 +1,13 @@
+import com.mysql.cj.x.protobuf.MysqlxPrepare;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +29,13 @@ public class Cyclit {
 
 
 
-
+    private static int toMins(String s) {
+        String[] hourMin = s.split(":");
+        int hour = Integer.parseInt(hourMin[0]);
+        int mins = Integer.parseInt(hourMin[1]);
+        int hoursInMins = hour * 60;
+        return hoursInMins + mins;
+    }
     public static void login() throws IOException, SQLException, ClassNotFoundException {
 
         //enter user and pass
@@ -97,7 +107,7 @@ public class Cyclit {
             Employee.deletefromdb();
         }
         else if(whatToDo==4){
-            Cyclit.db.employeeNaturalJoinCustomer();
+            Cyclit.db.employeeIntersectCustomer();
         }
 
         else if(whatToDo==5){
@@ -164,7 +174,7 @@ public class Cyclit {
             while(true) {
                 System.out.println("Welcome " + user.getName() + "\n");
                 System.out.println("===================================================");
-                System.out.println("1. Book a bike \n2. Check menu options \n3. Logout");
+                System.out.println("1. Book a bike \n 2. End Ride \n3. Check menu options \n4. Logout");
                 int id = Reader.nextInt();
                 int flag = 0;
                 switch (id) {
@@ -172,9 +182,12 @@ public class Cyclit {
                         bookCycle(user);
                         break;
                     case 2:
-                        displayMenu(user);
+                        endRide(user);
                         break;
                     case 3:
+                        displayMenu(user);
+                        break;
+                    case 4:
                         flag=1;
                         break;
                 }
@@ -230,17 +243,12 @@ public class Cyclit {
 //        System.out.println("Update User Details, Please note the options here :");
         int userid = user.getUserID();
 
-//        System.out.println("===============================================================================================");
-//        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-//        System.out.println("===============================================================================================");
+
         System.out.println("===================================================================================================");
         System.out.println("current Details\n");
         user.viewUser();
         User.updatedb(userid); //update user ID function
-//        System.out.println("===============================================================================================");
-//        System.out.println("| User ID |  | Name |  | Roll Number | | Email ID | | Address | | Contact Number | | Password |");
-//        System.out.println("===============================================================================================");
-        System.out.println("Updated Details are: \n");
+        System.out.println("Updated Details are: ");
         User.getfromdb(userid).viewUser();
     }
 
@@ -257,9 +265,6 @@ public class Cyclit {
                 System.out.println("Enter Amount: ");
                 int amount = Reader.nextInt();
                 Payment_interface.addPayInterface(user.getUserID(),amount,true);
-
-                //TODO get payment id for further searching into the table otherwise giving error
-
                 System.out.println("Confirm Amount (Y/N) : ");
                 String con = Reader.nextLine();
                 if(con.equals("Y") || con.equals("y")){
@@ -293,7 +298,7 @@ public class Cyclit {
             int viewUserDetailMenu = Reader.nextInt();
             switch (viewUserDetailMenu) {
                 case 1:
-                    User.getfromdb(i);
+                    user.viewUser();
                     break;
                 case 2:
                     updateUserDetails(user);
@@ -358,8 +363,37 @@ public class Cyclit {
         register(){ addUser }
          */
     }
-    public void endRide(){
+    public static void endRide(User user) throws SQLException, IOException {
+        int destStand;
+        System.out.println("Choose the stand on which you want to park the bike: ");
+        Stand.listAll();
+        destStand = Reader.nextInt();
+        OngoingRides ride = OngoingRides.getfromdb(user.getUserID());
+        int payment = generatePayment(ride);
+        Payment_interface.addPayInterface(user.getUserID(),payment, false);
+        System.out.println("Confirm Amount (Y/N) : ");
+        String con = Reader.nextLine();
+        if(con.equals("Y") || con.equals("y")){
+            PreparedStatement query = Database.connection.prepareStatement("call addtriphistory(?,?);");
+            query.setInt(1,destStand );
+            query.setInt(2, user.getUserID());
+            query.executeUpdate();
+            Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
+            Payment_interface.deletePayInterface_byUserId(user.getUserID());
+//            user = User.getfromdb(user.getUserID());
+        }
+        else {
+            System.out.println("Invalid Input (Try Again)");
+        }
 
+
+    }
+
+    private static int generatePayment(OngoingRides ride) throws SQLException {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+        int totalTime = toMins(ride.getOutTime()) - toMins(sdf.format(cal.getTime()));
+        return totalTime;
     }
 
     //-------------------------Cycle--------------------------------------------------------

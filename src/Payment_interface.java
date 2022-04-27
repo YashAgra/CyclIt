@@ -53,7 +53,7 @@ public class Payment_interface {
         this.status = status;
     }
 
-    public static void addPayInterface(int user_id,int amount, boolean isWalletRecharge) throws SQLException {
+    public static void  addPayInterface(int user_id,int amount, boolean isWalletRecharge) throws SQLException {
         Payment_interface pay=new Payment_interface();
 
         pay.user_id=user_id;
