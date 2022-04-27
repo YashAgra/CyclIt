@@ -16,18 +16,15 @@ import java.util.StringTokenizer;
 public class Cyclit {
 
     static Database db;
-
     static {
         try {
-            db = new Database();
+            db = new Database("root", "123456789");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
-
 
     private static int toMins(String s) {
         String[] hourMin = s.split(":");
@@ -83,15 +80,19 @@ public class Cyclit {
         String type=emp.getType();
         if(type=="HR"){
             is_HR(emp);
+            db = new Database("hr_team", "hrteam");
         }
         else if(type=="CycleManager"){
             is_cycleManager(emp);
+            db = new Database("cycle_manager", "cyclemanager");
         }
         else if(type=="Service"){
             is_serviceMan(emp);
+            db = new Database("service_man", "serviceman");
         }
         else if(type=="PR"){
             is_PRman(emp);
+            db = new Database("pr_team", "analysisteam");
         }
     }
 
@@ -133,7 +134,7 @@ public class Cyclit {
             case 8: getAllService();
             case 9: db.feedbackToService();
             case 10: db.averageCycleUserTime();
-            case 11: db.ListOfServicesClosedbyEmployee();
+//            case 11: db.ListOfServicesClosedbyEmployee();
             case -1: break;
         }
     }
@@ -330,6 +331,8 @@ public class Cyclit {
         System.out.println("Select a cycle from the list below: \n");
         Cycle.listAllCycle(standId);
         int cid = Reader.nextInt();
+
+        Cycle.UpdateCycleInUse_toTrue(cid);
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
         OngoingRides ride = new OngoingRides(uid,cid, standId, sdf.format(cal.getTime()));
@@ -369,7 +372,7 @@ public class Cyclit {
         register(){ addUser }
          */
     }
-    public static void endRide(User user) throws SQLException, IOException {
+    public static void endRide(User user) throws SQLException, IOException, ClassNotFoundException {
         int destStand;
         System.out.println("Choose the stand on which you want to park the bike: ");
         Stand.listAll();
@@ -377,6 +380,7 @@ public class Cyclit {
         OngoingRides ride = OngoingRides.getfromdb(user.getUserID());
         int payment = generatePayment(ride);
         Payment_interface.addPayInterface(user.getUserID(),payment, false);
+        System.out.println("The total amount to be paid is: "+payment);
         System.out.println("Confirm Amount (Y/N) : ");
         String con = Reader.nextLine();
         if(con.equals("Y") || con.equals("y")){
@@ -384,8 +388,17 @@ public class Cyclit {
             query.setInt(1,destStand );
             query.setInt(2, user.getUserID());
             query.executeUpdate();
+            PreparedStatement query1 = Database.connection.prepareStatement("call incrementStandCycleCount(?);");
+            query1.setInt(1,destStand );
+            query1.executeUpdate();
             Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
             Payment_interface.deletePayInterface_byUserId(user.getUserID());
+
+            Cycle.UpdateCycleInUse_toFalse(ride.getCycleID());
+
+            user.setWallet(user.getWallet()-payment);
+            User.updatewalletMoney(user);
+            user = User.getfromdb(user.getUserID());
 //            user = User.getfromdb(user.getUserID());
         }
         else {
@@ -397,9 +410,9 @@ public class Cyclit {
 
     private static int generatePayment(OngoingRides ride) throws SQLException {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
-        int totalTime = toMins(ride.getOutTime()) - toMins(sdf.format(cal.getTime()));
-        return totalTime;
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        int totalTime = toMins(sdf.format(cal.getTime())) - toMins(ride.getOutTime());
+        return totalTime*2;
     }
 
     //-------------------------Cycle--------------------------------------------------------

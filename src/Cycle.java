@@ -100,12 +100,13 @@ public class Cycle {
 
     }
 
-    public static void UpdateCycleInUse(int cid) throws SQLException, ClassNotFoundException, IOException{
-        System.out.println("Enter 1 if cycle in use /else 0:");
-        int use=Reader.nextInt();
-        boolean flag= false;
-        if(use>=1) flag=true;
+    public static void UpdateCycleInUse_toTrue(int cid) throws SQLException, ClassNotFoundException, IOException{
+        boolean flag= true;
+        Cyclit.db.UpdateCycleInUse(cid,flag);
+    }
+    public static void UpdateCycleInUse_toFalse(int cid) throws SQLException, ClassNotFoundException, IOException{
 
+        boolean flag= false;
         Cyclit.db.UpdateCycleInUse(cid,flag);
 
 
