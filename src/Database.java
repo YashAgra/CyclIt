@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 public class Database {
     public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
-    public static final String user = "root";
-    public static final String password = "12345678";
+
     public static Connection connection = null;
-    Database() throws ClassNotFoundException, SQLException {
+    Database(String user, String password) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(connection_url, user, password);
     }
@@ -198,6 +197,7 @@ public class Database {
         PreparedStatement query = connection.prepareStatement("Select * from OngoingRides where UserId = ?");
         query.setInt(1,id);
         ResultSet resultSet = query.executeQuery();
+        resultSet.next();
         ride.setUSerID(resultSet.getInt("UserID"));
         ride.setCycleID(resultSet.getInt("CycleID"));
         ride.setStandID(resultSet.getInt("StandID"));
@@ -469,7 +469,7 @@ public class Database {
     public void averageCycleUserTime() throws SQLException {
         System.out.println("Greetings Cycle Manager! This is the average time each cycle is being used");
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(""); // TODO add SQL
+        ResultSet resultSet = query.executeQuery("select cid, avg(time_to_sec(timediff(end,start))/60) from trip_history group by cid;");
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
     }
 
@@ -478,7 +478,7 @@ public class Database {
 
         System.out.println("Greetings HR! This is the total assets (wallet + payments) of total Cyclit application!");
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(""); // TODO add SQL
+        ResultSet resultSet = query.executeQuery("select sum(amount) from payment;");
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
         //asset value
     }
@@ -487,7 +487,7 @@ public class Database {
         /* List all the employees who uses our app as a customer */
 
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+        ResultSet resultSet = query.executeQuery("select user.name, user.phone , user.email, user.address from user inner join employee on employee.email = user.email;");
         System.out.println("Greetings HR! This is the list of all employees who use our application as a customer : ");
         /*select user.name, user.phone , user.email, user.address from user
         inner join employee on employee.eid = user.user_id; */
@@ -498,7 +498,7 @@ public class Database {
     public void averageSalaryofEmployeeTypes() throws SQLException {
         System.out.println("Greetings HR! This is the average value Salary according to HR department, PR department, Service Department and Cycle Manager Department !");
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery("SELECT type, AVG(salary) AS val_1 FROM employee GROUP BY type;"); // TODO add sql
+        ResultSet resultSet = query.executeQuery("SELECT type, AVG(salary) AS val_1 FROM employee GROUP BY type;");
 
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
 
