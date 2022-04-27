@@ -121,6 +121,7 @@ public class Cyclit {
             case 8: getAllService();
             case 9: db.feedbackToService();
             case 10: db.averageCycleUserTime();
+            case -1: break;
         }
     }
 

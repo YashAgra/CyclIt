@@ -481,6 +481,7 @@ public class Database {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery(""); // TODO add SQL
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+        //asset value
     }
 
     public void employeeNaturalJoinCustomer() throws SQLException {
