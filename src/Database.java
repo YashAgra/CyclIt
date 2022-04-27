@@ -568,9 +568,19 @@ public class Database {
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
     }
 
-    // <Cycle Manager Queries begin>
+    public void listOfServicesClosedbyEmployee() throws SQLException, IOException {
+        /* Gives list of service closed by an employee which has been inputed. */
+        System.out.println("Greetings Cycle Managers! This is the list of employees who have closed a service after completion ");
 
-    // TODO 1 query left that will be inputted in user trip history function. Number of queries left to write = 3
+        System.out.println("Please Enter the Employee id value :");
+        int eid = Reader.nextInt();
+        Statement query = connection.createStatement();
+        ResultSet resultSet = query.executeQuery(""); // TODO add query
+        net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
+    }
+
+
+    // TODO 1 query left that will be inputted in user trip history function. Number of functions left to write = 0
 
     //Changes made
 
