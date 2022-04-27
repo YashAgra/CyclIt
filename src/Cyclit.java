@@ -95,7 +95,7 @@ public class Cyclit {
             Employee.deletefromdb();
         }
         else if(whatToDo==4){
-            Cyclit.db.employeeNaturalJoinCustomer();
+            Cyclit.db.employeeIntersectCustomer();
         }
 
         else if(whatToDo==5){

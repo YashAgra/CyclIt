@@ -467,11 +467,12 @@ public class Database {
     //10 Queries start from Here !
 
     //<Start with HR>
-    public void employeeNaturalJoinCustomer() throws SQLException {
+    public void employeeIntersectCustomer() throws SQLException {
         /* List all the employees who uses our app as a customer */
 
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+        ResultSet resultSet = query.executeQuery("select user.name, user.phone, user.email, user.address from user " +
+                                                     "inner join employee on employee.email = user.email"); // TODO add sql
         System.out.println("Greetings HR! This is the list of all employees who use our application as a customer : ");
         /*select user.name, user.phone , user.email, user.address from user
         inner join employee on employee.eid = user.user_id; */
@@ -497,7 +498,7 @@ public class Database {
         Statement query = connection.createStatement();
         System.out.println("Greetings PR! This is the list of all the users : This list is for both employee and users, and does not have any duplicates");
 
-        ResultSet resultSet = query.executeQuery("SELECT name, address, email, phone FROM user UNION select name, address,email, phone from employee;"); // TODO add sql
+        ResultSet resultSet = query.executeQuery("SELECT name, address, email, phone FROM user UNION select name, address,email, phone from employee;");
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
 
     }
