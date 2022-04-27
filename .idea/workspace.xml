@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="54e1d911-47b7-453f-b866-bde230b4dcf7" name="Changes" comment="">
+    <list default="true" id="54e1d911-47b7-453f-b866-bde230b4dcf7" name="Changes" comment="second commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Cyclit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cyclit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Feedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Feedback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Payment_interface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Payment_interface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,6 +162,16 @@
     <MESSAGE value="initial commit" />
     <MESSAGE value="interface improved" />
     <option name="LAST_COMMIT_MESSAGE" value="interface improved" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.sql.SQLException" package="java.sql" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Cyclit$SQLConnection.ic" NAME="SQLConnection Coverage Results" MODIFIED="1650014215204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

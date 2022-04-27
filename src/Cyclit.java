@@ -269,12 +269,18 @@ public class Cyclit {
                 String con = Reader.nextLine();
                 if(con.equals("Y") || con.equals("y")){
                     Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
-                    //Payment_interface.deletePayInterface_byUserId(user.getUserID());
+                    Payment_interface.deletePayInterface_byUserId(user.getUserID());
                     user.setWallet(user.getWallet()+amount);
                     User.updatewalletMoney(user);
                     user = User.getfromdb(user.getUserID());
                 }
-                else {
+                else if(con.equals("N") || con.equals("n")) {
+                    Payment_interface.deletePayInterface_byUserId(user.getUserID());
+                    System.out.println("OK, Add Money Again");
+                    continue;
+                }
+                else{
+                    Payment_interface.deletePayInterface_byUserId(user.getUserID());
                     System.out.println("Invalid Input (Try Again)");
                     continue;
                 }
