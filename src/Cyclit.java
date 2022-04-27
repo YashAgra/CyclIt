@@ -16,6 +16,15 @@ import java.util.StringTokenizer;
 public class Cyclit {
 
     static Database db;
+    static {
+        try {
+            db = new Database("root", "12345678");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static int toMins(String s) {
         String[] hourMin = s.split(":");
@@ -125,7 +134,7 @@ public class Cyclit {
             case 8: getAllService();
             case 9: db.feedbackToService();
             case 10: db.averageCycleUserTime();
-            case 11: db.ListOfServicesClosedbyEmployee();
+//            case 11: db.ListOfServicesClosedbyEmployee();
             case -1: break;
         }
     }
