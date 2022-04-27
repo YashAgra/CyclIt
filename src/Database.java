@@ -3,9 +3,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
-    public static final String connection_url = "jdbc:mysql://localhost:3306/cyclit";
+    public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
     public static final String user = "root";
-    public static final String password = "123456789";
+    public static final String password = "12345678";
     public static Connection connection = null;
     Database() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -472,7 +472,7 @@ public class Database {
 
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("select user.name, user.phone, user.email, user.address from user " +
-                                                     "inner join employee on employee.email = user.email"); // TODO add sql
+                                                     "inner join employee on employee.email = user.email");
         System.out.println("Greetings HR! This is the list of all employees who use our application as a customer : ");
         /*select user.name, user.phone , user.email, user.address from user
         inner join employee on employee.eid = user.user_id; */

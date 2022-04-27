@@ -152,23 +152,10 @@ public class Cyclit {
     private static void its_a_user(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
         User user = User.getfromdb(userid, pass);
         if(user!=null) {
-            System.out.println("Welcome " + user.getName() + "\n");
-            Stand.listAll();
-//            for (int i = 0; i < standList.size(); i++) {
-//                Stand stand = standList.get(i);
-//                System.out.print("  ");
-//                System.out.print(stand.getId());
-//                System.out.print("    |");
-//                System.out.print(stand.getLocation());
-//                int z = stand.getLocation().length();
-//                System.out.print(" ".repeat(41 - z) + "|");
-//                System.out.println(stand.getCycleCount());
-//
 //                //TODO HANDLE THE EXCEPTION IF USER ID IS NOT PRESENT
-//            }
+            System.out.println("Welcome " + user.getName() + "\n");
+            System.out.println("===================================================");
             while(true) {
-                System.out.println("Welcome " + user.getName() + "\n");
-                System.out.println("===================================================");
                 System.out.println("1. Book a bike \n2. Check menu options \n3. Logout");
                 int id = Reader.nextInt();
                 int flag = 0;
