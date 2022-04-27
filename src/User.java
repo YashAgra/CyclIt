@@ -127,7 +127,6 @@ public class User {
             System.out.println("3. Change PhoneNumber");
             System.out.println("4. Change Password");
             System.out.println("5. exit");
-
             i = Reader.nextInt();
             if(i==1){
                 System.out.println("Name : ");
@@ -183,3 +182,7 @@ public class User {
         System.out.println("Contact Number: "+ this.PhoneNumber);
     }
 }
+//TODO SYNC STAND CYCLE COUNT WITH ACTUAL CYCLES IN THE CYCLE TABLE
+//TODO CREATE END RIDE FUNCTION
+//TODO CREATE USER ROLES AND ASSIGN GRANTS
+//TODO SET TRIGGER TO INSERT DATA IN USER TRIP HISTORY AFTER A RIDE ENDS

@@ -11,6 +11,8 @@ public class Payment_interface {
     private boolean isWalletRecharge;
     private boolean status;
 
+    //public static int payid = 0;
+
     public int getPayment_id() {
         return payment_id;
     }
@@ -51,14 +53,13 @@ public class Payment_interface {
         this.status = status;
     }
 
-    public static void addPayInterface(int user_id,int amount, boolean isWalletRecharge) throws SQLException {
+    public static void  addPayInterface(int user_id,int amount, boolean isWalletRecharge) throws SQLException {
         Payment_interface pay=new Payment_interface();
 
         pay.user_id=user_id;
         pay.amount=amount;
         pay.isWalletRecharge=isWalletRecharge;
         pay.status=false;
-
         Cyclit.db.addPayInterface(pay);
     }
 
