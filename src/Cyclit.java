@@ -17,18 +17,6 @@ public class Cyclit {
 
     static Database db;
 
-    static {
-        try {
-            db = new Database();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-
     private static int toMins(String s) {
         String[] hourMin = s.split(":");
         int hour = Integer.parseInt(hourMin[0]);
@@ -83,15 +71,19 @@ public class Cyclit {
         String type=emp.getType();
         if(type=="HR"){
             is_HR(emp);
+            db = new Database("hr_team", "hrteam");
         }
         else if(type=="CycleManager"){
             is_cycleManager(emp);
+            db = new Database("cycle_manager", "cyclemanager");
         }
         else if(type=="Service"){
             is_serviceMan(emp);
+            db = new Database("service_man", "serviceman");
         }
         else if(type=="PR"){
             is_PRman(emp);
+            db = new Database("pr_team", "analysisteam");
         }
     }
 
@@ -268,7 +260,7 @@ public class Cyclit {
                 String con = Reader.nextLine();
                 if(con.equals("Y") || con.equals("y")){
                     Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
-                    //Payment_interface.deletePayInterface_byUserId(user.getUserID());
+                    Payment_interface.deletePayInterface_byUserId(user.getUserID());
                     user.setWallet(user.getWallet()+amount);
                     User.updatewalletMoney(user);
                     user = User.getfromdb(user.getUserID());
@@ -370,6 +362,7 @@ public class Cyclit {
         OngoingRides ride = OngoingRides.getfromdb(user.getUserID());
         int payment = generatePayment(ride);
         Payment_interface.addPayInterface(user.getUserID(),payment, false);
+        System.out.println("The total amount to be paid is: "+payment);
         System.out.println("Confirm Amount (Y/N) : ");
         String con = Reader.nextLine();
         if(con.equals("Y") || con.equals("y")){
@@ -377,6 +370,9 @@ public class Cyclit {
             query.setInt(1,destStand );
             query.setInt(2, user.getUserID());
             query.executeUpdate();
+            PreparedStatement query1 = Database.connection.prepareStatement("call incrementStandCycleCount(?);");
+            query1.setInt(1,destStand );
+            query1.executeUpdate();
             Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
             Payment_interface.deletePayInterface_byUserId(user.getUserID());
 //            user = User.getfromdb(user.getUserID());
@@ -390,9 +386,9 @@ public class Cyclit {
 
     private static int generatePayment(OngoingRides ride) throws SQLException {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
-        int totalTime = toMins(ride.getOutTime()) - toMins(sdf.format(cal.getTime()));
-        return totalTime;
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        int totalTime = toMins(sdf.format(cal.getTime())) - toMins(ride.getOutTime());
+        return totalTime*2;
     }
 
     //-------------------------Cycle--------------------------------------------------------
