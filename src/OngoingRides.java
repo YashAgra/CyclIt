@@ -54,9 +54,9 @@ public class OngoingRides {
     }
 
     static OngoingRides getfromdb(int id) throws SQLException {
-        return Cyclit.db.getOngoigRides(id);
+        return Cyclit.db.getOngoingRides(id);
     }
     static void deletefromdb(int id) throws SQLException {
-        Cyclit.db.deleteOngoigRides(id);
+        Cyclit.db.deleteOngoingRides(id);
     }
 }

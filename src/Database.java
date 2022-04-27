@@ -2,9 +2,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
-    public static final String connection_url = "jdbc:mysql://localhost:3306/cyclit";
+    public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
     public static final String user = "root";
-    public static final String password = "123456789";
+    public static final String password = "12345678";
     public static Connection connection = null;
     Database() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -175,7 +175,7 @@ public class Database {
     }
 
     public void addOngoingRides(OngoingRides ride) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("Insert Into OngoigRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("Insert Into OngoingRides (UserID,CycleID,StandID,OutTime) Values (?,?,?,?)");
         query.setInt(1,ride.getUSerID());
         query.setInt(2,ride.getCycleID());
         query.setInt(3,ride.getStandID());
@@ -185,16 +185,16 @@ public class Database {
 
     }
 
-    public void deleteOngoigRides(int id) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("Delete from OngoigRides where UserID = ?");
+    public void deleteOngoingRides(int id) throws SQLException {
+        PreparedStatement query = connection.prepareStatement("Delete from OngoingRides where UserID = ?");
         query.setInt(1,id);
         query.executeQuery();
         query.close();
     }
 
-    public OngoingRides getOngoigRides(int id) throws SQLException {
+    public OngoingRides getOngoingRides(int id) throws SQLException {
         OngoingRides ride = new OngoingRides();
-        PreparedStatement query = connection.prepareStatement("Select * from OngoigRides where UserId = ?");
+        PreparedStatement query = connection.prepareStatement("Select * from OngoingRides where UserId = ?");
         query.setInt(1,id);
         ResultSet resultSet = query.executeQuery();
         ride.setUSerID(resultSet.getInt("UserID"));
@@ -273,22 +273,21 @@ public class Database {
     }
 
     //Get all cycles on a stand
-    public static ArrayList<Cycle> getAllCycle(int sid) throws SQLException, ClassNotFoundException {
-        PreparedStatement query = connection.prepareStatement("SELECT * FROM CYCLE WHERE stand_id = ?");
+    public static ResultSet getAllCycle(int sid) throws SQLException, ClassNotFoundException {
+        PreparedStatement query = connection.prepareStatement("SELECT cycle_id, model_no FROM CYCLE WHERE stand_id = ?");
         query.setInt(1,sid);
         ResultSet resultSet = query.executeQuery();
-        ArrayList<Cycle> returnList = new ArrayList<>();
-        while(resultSet.next()){
-            Cycle cycle = new Cycle();
-            cycle.setCycle_id(resultSet.getInt("cycle_id"));
-            cycle.setCycle_qr((resultSet.getString("cycle_qr")));
-            cycle.setInUse(resultSet.getBoolean("inUse"));
-            cycle.setStand_id(resultSet.getInt("stand_id"));
-            cycle.setInRepair(resultSet.getBoolean("InRepair"));
-            cycle.setModel_no(resultSet.getString("model_no"));
-            returnList.add(cycle);
-        }
-        return returnList;
+//        ArrayList<Cycle> returnList = new ArrayList<>();
+//        while(resultSet.next()){
+//            Cycle cycle = new Cycle();
+//            cycle.setCycle_id(resultSet.getInt("cycle_id"));
+//            cycle.setCycle_qr((resultSet.getString("cycle_qr")));
+//            cycle.setInUse(resultSet.getBoolean("inUse"));
+//            cycle.setStand_id(resultSet.getInt("stand_id"));
+//            cycle.setInRepair(resultSet.getBoolean("InRepair"));
+//            cycle.setModel_no(resultSet.getString("model_no"));
+//            returnList.add(cycle);
+        return resultSet;
     }
 
     public void deleteCycle(int cid) throws SQLException {
