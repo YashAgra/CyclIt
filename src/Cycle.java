@@ -130,10 +130,13 @@ public class Cycle {
         Cyclit.db.deleteCycle(cid);
     }
 
+    public static void listAllCycle() throws SQLException, ClassNotFoundException{
+        ResultSet cycles = Cyclit.db.getAllCycle();
+        net.efabrika.util.DBTablePrinter.printResultSet(cycles);
+    }
+    public static void listAllCycle(int sid) throws SQLException, ClassNotFoundException {
 
-    public static void listAllCycle() throws SQLException, ClassNotFoundException {
-
-        ResultSet cycles=Cyclit.db.getAllCycle();
+        ResultSet cycles=Cyclit.db.getAllCycle(sid);
         net.efabrika.util.DBTablePrinter.printResultSet(cycles);
 //        System.out.println("=====================================Cycles===============================\n\n");
 //
