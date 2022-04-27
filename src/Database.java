@@ -568,7 +568,7 @@ public class Database {
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
     }
 
-    public void ListOfServicesClosedbyEmployee() throws SQLException, IOException {
+    public void listOfServicesClosedbyEmployee() throws SQLException, IOException {
         /* Gives list of service closed by an employee which has been inputed. */
         System.out.println("Greetings Cycle Managers! This is the list of employees who have closed a service after completion ");
 
