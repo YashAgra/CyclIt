@@ -11,6 +11,8 @@ public class Payment_interface {
     private boolean isWalletRecharge;
     private boolean status;
 
+    //public static int payid = 0;
+
     public int getPayment_id() {
         return payment_id;
     }
@@ -58,7 +60,6 @@ public class Payment_interface {
         pay.amount=amount;
         pay.isWalletRecharge=isWalletRecharge;
         pay.status=false;
-
         Cyclit.db.addPayInterface(pay);
     }
 
