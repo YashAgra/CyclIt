@@ -15,6 +15,7 @@ public class Employee {
     private String PhoneNumber;
     private String Address;
     private String password;
+    private int Salary;
 
     public Employee() throws SQLException, ClassNotFoundException {
     }
@@ -26,8 +27,6 @@ public class Employee {
     public void setSalary(int salary) {
         Salary = salary;
     }
-
-    private int Salary;
 
     public int getEmployeeId() {
         return EmployeeId;
