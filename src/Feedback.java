@@ -45,7 +45,7 @@ public class Feedback {
         return;
     }
 
-    public static ArrayList<Feedback> getAllFeedback() throws SQLException {
+    public static ResultSet getAllFeedback() throws SQLException {
         return Cyclit.db.getAllFeedback();
     }
 
