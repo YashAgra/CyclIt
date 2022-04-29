@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Database {
     public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
-
     public static Connection connection = null;
     Database(String user, String password) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -65,7 +64,7 @@ public class Database {
     }
 
     public void addEmployee(Employee employee) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, email, phone, Type, Name, Salary) values(?,?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, email, phone, Type, Name, Salary , password) values(?,?,?,?,?,?,?)");
         query.setString(1,employee.getAddress());
         query.setString(2, employee.getEmailAddress());
         query.setString(3, employee.getPhoneNumber());
@@ -369,7 +368,7 @@ public class Database {
     public int getEmployeeID()  throws SQLException { //To randomly get an employee ID
         ResultSet resultSet; //initializing variable
         Statement query = connection.createStatement();
-        resultSet = query.executeQuery("SELECT eid FROM employee ORDER BY RAND() LIMIT 1"); //take random employee from table
+        resultSet = query.executeQuery("SELECT eid FROM employee WHERE type='Service' ORDER BY RAND() LIMIT 1"); //take random employee from table
         //note that the query has to be updated.
         int id = 0;
         while (resultSet.next()) {
@@ -379,7 +378,7 @@ public class Database {
     }
 
     public void addService(Service service) throws SQLException { //Query Complete
-        PreparedStatement query = connection.prepareStatement("INSERT INTO service(int cycle_id, String maint_info, int eid, int ticketStatus,int fid) values(?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO service(cycle_id, maint_info, eid, ticketStatus, fid) values(?,?,?,?,?)");
         query.setInt(1,service.getCycleID());
         query.setString(2,service.getMaintenanceInformation());
         query.setInt(3,service.getEmployeeID());
@@ -391,7 +390,7 @@ public class Database {
     }
 
     public void closeTicket(int id) throws SQLException {
-        PreparedStatement query= connection.prepareStatement("UPDATE service SET ticket=? where id=?");
+        PreparedStatement query= connection.prepareStatement("UPDATE service SET ticketStatus=? where id=?");
         query.setBoolean(1,false);
         query.setInt(2,id);
 
@@ -412,7 +411,7 @@ public class Database {
 
     public ResultSet getAll_Active_Services() throws SQLException {
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery("SELECT * FROM service where ticketStatus = False");
+        ResultSet resultSet = query.executeQuery("SELECT * FROM service where ticketStatus = True");
 //        ArrayList<Service> returnList = new ArrayList<>();
 //        while(resultSet.next()){
 //            Service service = new Service();
