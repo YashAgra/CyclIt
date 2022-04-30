@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Database {
     public static final String connection_url = "jdbc:mysql://localhost:3306/cycleit";
-//    public static final String user = "root";
-//    public static final String password = "123456789";
     public static Connection connection = null;
     Database(String user, String password) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -66,7 +64,7 @@ public class Database {
     }
 
     public void addEmployee(Employee employee) throws SQLException {
-        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, email, phone, Type, Name, Salary) values(?,?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO Employee(Address, email, phone, Type, Name, Salary , password) values(?,?,?,?,?,?,?)");
         query.setString(1,employee.getAddress());
         query.setString(2, employee.getEmailAddress());
         query.setString(3, employee.getPhoneNumber());
@@ -329,19 +327,19 @@ public class Database {
         query.close();
     }
 
-    public  ArrayList<Feedback> getAllFeedback() throws SQLException {
+    public ResultSet getAllFeedback() throws SQLException {
         Statement query = connection.createStatement();
         ResultSet resultSet = query.executeQuery("SELECT * FROM feedback");
-        ArrayList<Feedback> returnList = new ArrayList<>();
-        while(resultSet.next()){
-            Feedback feed = new Feedback();
-            feed.setFeedback_id(resultSet.getInt("feedback_id"));
-            feed.setUser_id(resultSet.getInt("user_id"));
-            feed.setFeedback(resultSet.getString("feedback"));
-            returnList.add(feed);
-        }
-
-        return returnList;
+//        ArrayList<Feedback> returnList = new ArrayList<>();
+//        while(resultSet.next()){
+//            Feedback feed = new Feedback();
+//            feed.setFeedback_id(resultSet.getInt("feedback_id"));
+//            feed.setUser_id(resultSet.getInt("user_id"));
+//            feed.setFeedback(resultSet.getString("feedback"));
+//            returnList.add(feed);
+//        }
+//
+        return resultSet;
 
     }
 
@@ -391,7 +389,7 @@ public class Database {
     public int getEmployeeID()  throws SQLException { //To randomly get an employee ID
         ResultSet resultSet; //initializing variable
         Statement query = connection.createStatement();
-        resultSet = query.executeQuery("SELECT eid FROM employee ORDER BY RAND() LIMIT 1"); //take random employee from table
+        resultSet = query.executeQuery("SELECT eid FROM employee WHERE type='Service' ORDER BY RAND() LIMIT 1"); //take random employee from table
         //note that the query has to be updated.
         int id = 0;
         while (resultSet.next()) {
@@ -401,7 +399,7 @@ public class Database {
     }
 
     public void addService(Service service) throws SQLException { //Query Complete
-        PreparedStatement query = connection.prepareStatement("INSERT INTO service(int cycle_id, String maint_info, int eid, int ticketStatus,int fid) values(?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO service(cycle_id, maint_info, eid, ticketStatus, fid) values(?,?,?,?,?)");
         query.setInt(1,service.getCycleID());
         query.setString(2,service.getMaintenanceInformation());
         query.setInt(3,service.getEmployeeID());
@@ -413,7 +411,7 @@ public class Database {
     }
 
     public void closeTicket(int id) throws SQLException {
-        PreparedStatement query= connection.prepareStatement("UPDATE service SET ticket=? where id=?");
+        PreparedStatement query= connection.prepareStatement("UPDATE service SET ticketStatus=? where id=?");
         query.setBoolean(1,false);
         query.setInt(2,id);
 
@@ -434,7 +432,7 @@ public class Database {
 
     public ResultSet getAll_Active_Services() throws SQLException {
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery("SELECT * FROM service where ticketStatus = False");
+        ResultSet resultSet = query.executeQuery("SELECT * FROM service where ticketStatus = True");
 //        ArrayList<Service> returnList = new ArrayList<>();
 //        while(resultSet.next()){
 //            Service service = new Service();
@@ -533,7 +531,7 @@ public class Database {
         Statement query = connection.createStatement();
         System.out.println("Greetings PR! This is the list of all the users : This list is for both employee and users, and does not have any duplicates");
 
-        ResultSet resultSet = query.executeQuery("SELECT name, address, email, phone FROM user UNION select name, address,email, phone from employee;"); // TODO add sql
+        ResultSet resultSet = query.executeQuery("SELECT name, address, email, phone FROM user UNION select name, address,email, phone from employee;");
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
 
     }
@@ -542,11 +540,20 @@ public class Database {
     public void averageSpendGreaterThanAmount() throws SQLException, IOException {
         //List of users with Average spend greater than certain amount which is inputed
         System.out.println("Greetings PR! Please input the amount by which you want to check for spending");
-        int amount = Reader.nextInt(); //TODO use amount for this query, and input the same!
+        int amount = Reader.nextInt(); // done use amount for this query, and input the same!
 
         System.out.println("Greetings PR! This is the list of cycle users which have spend them more than " +  amount +  " You have the authority to reward them now!");
-        Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+        PreparedStatement query = connection.prepareStatement("DELIMITER $$\n" +
+                "create procedure getUserAvgSpend(in avgspend int)\n" +
+                "BEGIN\n" +
+                "select id from\n" +
+                "(select uid as id, avg(amount) as avgamount\n" +
+                "from payment\n" +
+                "group by uid) as paytable\n" +
+                "where avgamount>?;\n" +
+                "END;");
+        query.setInt(1, amount);
+        ResultSet resultSet = query.executeQuery();
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
 
     }
@@ -554,7 +561,11 @@ public class Database {
     public void usersWithEveryCycle() throws SQLException {
         System.out.println("Greetings PR! This is the list of users who have used every single cycle. Send Promo-code!");
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(""); // TODO add sql
+        ResultSet resultSet = query.executeQuery("select uid " +
+                "from trip_history " +
+                "where cid in (select cycle_id from cycle) " +
+                "group by uid " +
+                "having count(distinct cid) = (select count(cycle_id) from cycle)");
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
         //Please note the query!
 //        select distinct user.id, user.name
@@ -573,7 +584,7 @@ public class Database {
 
         System.out.println("Greetings PR! These is table informs about feedback to service for each user. This is for data analytics that can be used to improve feedback");
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(" "); // TODO add sql
+        ResultSet resultSet = query.executeQuery("select user_id, count(id) as number_of_feedbacks from feedback group by user_id;");
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
 //        select user_id, count(id) as number_of_users
 //        from feedback
@@ -586,7 +597,7 @@ public class Database {
     public void feedbackToService() throws SQLException {
         System.out.println("Greetings Cycle Managers! Check the services that were derived from feedback !");
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery("SELECT * from feedback natural join service;"); // TODO check SQL query that I inputed
+        ResultSet resultSet = query.executeQuery("SELECT * from feedback natural join service;"); // checked and added into document
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
     }
 
@@ -597,7 +608,7 @@ public class Database {
         System.out.println("Please Enter the Employee id value :");
         int eid = Reader.nextInt();
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(""); // TODO add query
+        ResultSet resultSet = query.executeQuery(""); // TODO explain the query to Yash
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
     }
 
@@ -605,5 +616,6 @@ public class Database {
     // TODO 1 query left that will be inputted in user trip history function. Number of functions left to write = 0
 
     //Changes made
+    //TODO UPDATE STAND ID
 
 }
