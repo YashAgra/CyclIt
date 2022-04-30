@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="54e1d911-47b7-453f-b866-bde230b4dcf7" name="Changes" comment="second commit">
-      <change beforePath="$PROJECT_DIR$/src/Cycle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cycle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Cyclit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cyclit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database.java" afterDir="false" />
+    <list default="true" id="54e1d911-47b7-453f-b866-bde230b4dcf7" name="Changes" comment="Majorly all the Exceptions are handeled">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +82,7 @@
       <recent name="C:\Users\yashj\IdeaProjects\Cyclit\src" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Q1">
     <configuration name="Cycleit" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="C:\Program Files\Java\jdk-18" />
       <option name="MAIN_CLASS_NAME" value="Cyclit" />
@@ -93,6 +91,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Q1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Q1" />
+      <module name="Cyclit" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Q1" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -117,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650799852782</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Majorly all the Exceptions are handeled">
+      <created>1651258430377</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1651258430377</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -131,7 +148,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="HEAD" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>
@@ -161,7 +178,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
     <MESSAGE value="interface improved" />
-    <option name="LAST_COMMIT_MESSAGE" value="interface improved" />
+    <MESSAGE value="Majorly all the Exceptions are handeled" />
+    <option name="LAST_COMMIT_MESSAGE" value="Majorly all the Exceptions are handeled" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
