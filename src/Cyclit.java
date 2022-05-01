@@ -1,5 +1,6 @@
 import com.mysql.cj.x.protobuf.MysqlxPrepare;
 
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +76,6 @@ public class Cyclit {
     }
 
     private static void its_a_employee(String userid,String pass) throws SQLException, IOException, ClassNotFoundException {
-        System.out.println("in employee\n");
         Employee emp=Employee.getfromdb(userid,pass);
         if(emp==null){
             System.out.println("--------Wrong details try again------------\n");
@@ -85,21 +85,16 @@ public class Cyclit {
         String type=emp.getType();
         if(type.equals("HR")){
             is_HR(emp);
-            db = new Database("hr_team", "hrteam");
         }
         else if(type.equals("CycleManager")){
             is_cycleManager(emp);
-            db = new Database("cycle_manager", "cyclemanager");
         }
         else if(type.equals("Service")){
             is_serviceMan(emp);
-            db = new Database("service_man", "serviceman");
         }
         else if(type.equals("PR")){
             is_PRman(emp);
-            db = new Database("pr_team", "analysisteam");
         }
-        System.out.println("returned from employee\n");
     }
 
     private static void is_HR(Employee emp) throws IOException, SQLException, ClassNotFoundException {
@@ -167,9 +162,9 @@ public class Cyclit {
                 case 11:
                     db.averageCycleUserTime();
                     break;
-                case 12:
-                    db.ListOfServicesClosedbyEmployee();
-                    break;
+//                case 12:
+//                    db.ListOfServicesClosedbyEmployee();
+//                    break;
                 case -1:
                     flag=true;
                     break;
@@ -345,8 +340,8 @@ public class Cyclit {
         }
     }
 
-    private static void triphistory(User user) {
-
+    private static void triphistory(User user) throws SQLException {
+        net.efabrika.util.DBTablePrinter.printResultSet(User.gettripHistory(user.getUserID()));
     }
 
     private static void viewUserDetails(User user) throws SQLException, IOException {
@@ -444,6 +439,8 @@ public class Cyclit {
             query1.executeUpdate();
             Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
             Payment_interface.deletePayInterface_byUserId(user.getUserID());
+            user.setWallet(user.getWallet()-payment);
+            User.updatewalletMoney(user);
 //            user = User.getfromdb(user.getUserID());
         }
         else {

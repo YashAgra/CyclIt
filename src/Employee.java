@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Employee {
 
@@ -92,9 +93,9 @@ public class Employee {
         employee.setEmailAddress(Reader.nextLine());
 
         System.out.println("Password: ");
-        employee.setPassword(Reader.nextLine());
+        employee.setPassword(Reader.next());
         System.out.println("Type : ");
-        employee.setType(Reader.next());
+        employee.setType(Reader.nextLine());
         System.out.println("Salary: ");
         employee.setSalary(Reader.nextInt());
 
@@ -105,13 +106,16 @@ public class Employee {
         return Cyclit.db.getEmployee(id);
     }
 
-    public static void deletefromdb() throws SQLException, IOException {
-        System.out.println("Employee you want to remove:");
+    public static void deletefromdb() throws SQLException, IOException, ClassNotFoundException {
+        System.out.println("Employee ID you want to remove:");
         int id=Reader.nextInt();
         Cyclit.db.deleteEmployee(id);
     }
 
     public static void updatedb() throws IOException, SQLException, ClassNotFoundException {
+        Statement stm = Database.connection.createStatement();
+        ResultSet rs = stm.executeQuery("Select * from employee");
+        net.efabrika.util.DBTablePrinter.printResultSet(rs);
         System.out.println("Enter the employee id to update: ");
         int id = Reader.nextInt();
         Employee employee = getfromdb(id);
