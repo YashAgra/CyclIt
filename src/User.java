@@ -171,7 +171,7 @@ public class User {
         Cyclit.db.updateWalletMoney(user);
     }
 
-    public static ArrayList<UserTripHistory> gettripHistory(int id) throws SQLException {
+    public static ResultSet gettripHistory(int id) throws SQLException {
         return Cyclit.db.gettripHistory(id);
     }
     public void viewUser(){

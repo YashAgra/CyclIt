@@ -1,3 +1,5 @@
+import com.mysql.cj.x.protobuf.MysqlxPrepare;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -74,9 +76,23 @@ public class Database {
         query.setString(7, employee.getPassword());
         query.executeUpdate();
         query.close();
+        PreparedStatement addEmployeeToDB = connection.prepareStatement("create user if not exists ?@'localhost' identified BY ?");
+        addEmployeeToDB.setString(1, employee.getEmailAddress());
+        addEmployeeToDB.setString(2, employee.getPassword());
+        addEmployeeToDB.executeUpdate();
+        addEmployeeToDB.close();
+        PreparedStatement grantPermission = connection.prepareStatement("grant ? to ?@'localhost'");
+        grantPermission.setString(1, employee.getType().toLowerCase());
+        grantPermission.setString(2, employee.getEmailAddress());
+        grantPermission.executeUpdate();
+        grantPermission.close();
     }
 
-    public void deleteEmployee(int id) throws SQLException {
+    public void deleteEmployee(int id) throws SQLException, ClassNotFoundException {
+        PreparedStatement deleteUser = connection.prepareStatement("DROP USER if exists ?@'localhost'");
+        String email = getEmployee(id).getEmailAddress();
+        deleteUser.setString(1,email);
+        deleteUser.executeUpdate();
         PreparedStatement query = connection.prepareStatement("DELETE FROM Employee where eid = ?");
         query.setInt(1,id);
         query.executeUpdate();
@@ -144,25 +160,11 @@ public class Database {
         query.executeUpdate();
         query.close();
     }
-    public ArrayList<UserTripHistory> gettripHistory(int id) throws SQLException {
-        ArrayList<UserTripHistory> list = new ArrayList<UserTripHistory>();
+    public ResultSet gettripHistory(int id) throws SQLException {
         PreparedStatement query = connection.prepareStatement("select * from trip_history where uid = ?");
         query.setInt(1,id);
         ResultSet result = query.executeQuery();
-        while(result.next()){
-            UserTripHistory trip =  new UserTripHistory();
-            trip.setDate(result.getString("date"));
-            trip.setCycleId(result.getInt("cid"));
-            trip.setDistance(result.getInt("distance"));
-            trip.setDestStandId(result.getInt("dest_stand"));
-            trip.setEndTime(result.getTime("end").toString());
-            trip.setPayID(result.getInt("pid"));
-            trip.setSourceStandID(result.getInt("source_stand"));
-            trip.setStartTime(result.getTime("start").toString());
-            trip.setUserID(result.getInt("uid"));
-            list.add(trip);
-        }
-        return list;
+        return result;
     }
 
     public void updateWalletMoney(User user) throws SQLException {
@@ -399,7 +401,7 @@ public class Database {
     }
 
     public void addService(Service service) throws SQLException { //Query Complete
-        PreparedStatement query = connection.prepareStatement("INSERT INTO service(cycle_id, maint_info, eid, ticketStatus, fid) values(?,?,?,?,?)");
+        PreparedStatement query = connection.prepareStatement("INSERT INTO service(cycle_id, maint_info, eid, ticketStatus, fid) values(?,?,?,false,?)");
         query.setInt(1,service.getCycleID());
         query.setString(2,service.getMaintenanceInformation());
         query.setInt(3,service.getEmployeeID());
@@ -489,7 +491,7 @@ public class Database {
     public void averageCycleUserTime() throws SQLException {
         System.out.println("Greetings Cycle Manager! This is the average time each cycle is being used");
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery("select cid, avg(time_to_sec(timediff(end,start))/60) from trip_history group by cid;");
+        ResultSet resultSet = query.executeQuery("select cid as cycle_id, avg(time_to_sec(timediff(end,start))/60) as avgtime from trip_history group by cid;");
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
     }
 
@@ -507,7 +509,7 @@ public class Database {
         /* List all the employees who uses our app as a customer */
 
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery("select user.name, user.phone , user.email, user.address from user inner join employee on employee.email = user.email;");
+        ResultSet resultSet = query.executeQuery("select user.name, user.phone , user.email, user.address from user inner join employee on employee.phone = user.phone;");
         System.out.println("Greetings HR! This is the list of all employees who use our application as a customer : ");
         /*select user.name, user.phone , user.email, user.address from user
         inner join employee on employee.eid = user.user_id; */
@@ -543,15 +545,7 @@ public class Database {
         int amount = Reader.nextInt(); // done use amount for this query, and input the same!
 
         System.out.println("Greetings PR! This is the list of cycle users which have spend them more than " +  amount +  " You have the authority to reward them now!");
-        PreparedStatement query = connection.prepareStatement("DELIMITER $$\n" +
-                "create procedure getUserAvgSpend(in avgspend int)\n" +
-                "BEGIN\n" +
-                "select id from\n" +
-                "(select uid as id, avg(amount) as avgamount\n" +
-                "from payment\n" +
-                "group by uid) as paytable\n" +
-                "where avgamount>?;\n" +
-                "END;");
+        PreparedStatement query = connection.prepareStatement("call getUserAvgSpend(?);");
         query.setInt(1, amount);
         ResultSet resultSet = query.executeQuery();
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
@@ -608,14 +602,8 @@ public class Database {
         System.out.println("Please Enter the Employee id value :");
         int eid = Reader.nextInt();
         Statement query = connection.createStatement();
-        ResultSet resultSet = query.executeQuery(""); // TODO explain the query to Yash
+        ResultSet resultSet = query.executeQuery("select eid as employee_id, count(id) as number_of_services from service where ticketStatus = false group by eid;");
         net.efabrika.util.DBTablePrinter.printResultSet(resultSet);
     }
-
-
-    // TODO 1 query left that will be inputted in user trip history function. Number of functions left to write = 0
-
-    //Changes made
-    //TODO UPDATE STAND ID
 
 }
