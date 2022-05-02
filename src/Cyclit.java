@@ -19,7 +19,7 @@ public class Cyclit {
     static Database db;
     static {
         try {
-            db = new Database("root", "12345678");
+            db = new Database("root", "123456789");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
@@ -230,7 +230,14 @@ public class Cyclit {
                 System.out.println("Welcome " + user.getName() + "\n");
                 System.out.println("===================================================");
                 System.out.println("1. Book a bike \n 2. End Ride \n3. Check menu options \n4. Logout");
-                int id = Reader.nextInt();
+                int id ;
+                try{
+                    id = Reader.nextInt();
+                }catch (NumberFormatException e){
+                    System.out.println("Invalid Input,Try Again");
+                    continue;
+                }
+
                 int flag = 0;
                 switch (id) {
                     case 1:
@@ -259,7 +266,15 @@ public class Cyclit {
         System.out.println();
         while (true) {
             System.out.println("Welcome to Menu \n 1. Feedback \n 2. View your Details\n 3. View Trip History\n 4. View wallet details\n else enter -1 to leave \n");
-            int displayid = Reader.nextInt();
+            int displayid;
+
+            try{
+                displayid = Reader.nextInt();
+            }catch (NumberFormatException e){
+                System.out.println("Invalid Input,Try Again");
+                continue;
+            }
+
             int flag = 0;
             switch (displayid) {
                 case 1:
@@ -314,7 +329,15 @@ public class Cyclit {
             System.out.println("Current Amount : " + user.getWallet());
             System.out.println("1. Add Money");
             System.out.println("2. exit");
-            input = Reader.nextInt();
+
+            try{
+                input = Reader.nextInt();
+            }catch (NumberFormatException e){
+                System.out.println("Invalid Input");
+                continue;
+            }
+
+
             if(input == 1){
                 System.out.println("==============================================================");
                 System.out.println("Enter Amount: ");
@@ -329,7 +352,13 @@ public class Cyclit {
                     User.updatewalletMoney(user);
                     user = User.getfromdb(user.getUserID());
                 }
-                else {
+                else if(con.equals("N") || con.equals("n")) {
+                    Payment_interface.deletePayInterface_byUserId(user.getUserID());
+                    System.out.println("OK, Add Money Again");
+                    continue;
+                }
+                else{
+                    Payment_interface.deletePayInterface_byUserId(user.getUserID());
                     System.out.println("Invalid Input (Try Again)");
                     continue;
                 }
@@ -372,13 +401,30 @@ public class Cyclit {
 
 
     private static void bookCycle(User user) throws IOException, SQLException, ClassNotFoundException {
-          Stand.listAll();
+
+        if(OngoingRides.getfromdb(user.getUserID()) != null){
+            System.out.println("You Already booked a cycle !");
+            return;
+        }
+
+        if(user.getWallet() <= 20 ){
+            System.out.println("There should be atleast 10 Rs in your wallet money");
+            return;
+        }
+
+        Stand.listAll();
         int uid = user.getUserID();
         System.out.println("Enter the stand ID: ");
         int standId = Reader.nextInt();
+        Cycle.listAllCycle_notinuse(standId);
         System.out.println("Select a cycle from the list below: \n");
-        Cycle.listAllCycle(standId);
+        System.out.println("IF No cycle check another stand (to go back type -1)\n");
         int cid = Reader.nextInt();
+        if(cid == -1){
+            return;
+        }
+
+        Cycle.UpdateCycleInUse_toTrue(cid);
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
         OngoingRides ride = new OngoingRides(uid,cid, standId, sdf.format(cal.getTime()));
@@ -418,7 +464,11 @@ public class Cyclit {
         register(){ addUser }
          */
     }
-    public static void endRide(User user) throws SQLException, IOException {
+    public static void endRide(User user) throws SQLException, IOException, ClassNotFoundException {
+        if(OngoingRides.getfromdb(user.getUserID()) == null) {
+            return;
+        }
+
         int destStand;
         System.out.println("Choose the stand on which you want to park the bike: ");
         Stand.listAll();
@@ -428,7 +478,16 @@ public class Cyclit {
         Payment_interface.addPayInterface(user.getUserID(),payment, false);
         System.out.println("The total amount to be paid is: "+payment);
         System.out.println("Confirm Amount (Y/N) : ");
-        String con = Reader.nextLine();
+
+        String con;
+        try{
+            con = Reader.nextLine();
+        }catch(NumberFormatException e){
+            System.out.println("Invalid Input, try Again");
+            Payment_interface.deletePayInterface_byUserId(user.getUserID());
+            return;
+        }
+
         if(con.equals("Y") || con.equals("y")){
             PreparedStatement query = Database.connection.prepareStatement("call addtriphistory(?,?);");
             query.setInt(1,destStand );
@@ -439,11 +498,16 @@ public class Cyclit {
             query1.executeUpdate();
             Payment_interface.UpdatePayInterface_status(user.getUserID(),true);
             Payment_interface.deletePayInterface_byUserId(user.getUserID());
+            Cycle.UpdateCycleStandId(ride.getCycleID(),destStand);
+            Cycle.UpdateCycleInUse_toFalse(ride.getCycleID());
             user.setWallet(user.getWallet()-payment);
             User.updatewalletMoney(user);
+            user = User.getfromdb(user.getUserID());
+
 //            user = User.getfromdb(user.getUserID());
         }
         else {
+            Payment_interface.deletePayInterface_byUserId(user.getUserID());
             System.out.println("Invalid Input (Try Again)");
         }
 

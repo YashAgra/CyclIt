@@ -100,12 +100,20 @@ public class Cycle {
 
     }
 
-    public static void UpdateCycleInUse(int cid) throws SQLException, ClassNotFoundException, IOException{
-        System.out.println("Enter 1 if cycle in use /else 0:");
-        int use=Reader.nextInt();
-        boolean flag= false;
-        if(use>=1) flag=true;
+    public static void UpdateCycleStandId(int cid,int sid) throws SQLException, ClassNotFoundException, IOException{
 
+//        System.out.println("Enter new stand_id:");
+        Cyclit.db.updateCycleStandId(cid,sid);
+
+    }
+
+    public static void UpdateCycleInUse_toTrue(int cid) throws SQLException, ClassNotFoundException, IOException{
+        boolean flag= true;
+        Cyclit.db.UpdateCycleInUse(cid,flag);
+    }
+    public static void UpdateCycleInUse_toFalse(int cid) throws SQLException, ClassNotFoundException, IOException{
+
+        boolean flag= false;
         Cyclit.db.UpdateCycleInUse(cid,flag);
 
 
@@ -137,6 +145,20 @@ public class Cycle {
     public static void listAllCycle(int sid) throws SQLException, ClassNotFoundException {
 
         ResultSet cycles=Cyclit.db.getAllCycle(sid);
+
+        net.efabrika.util.DBTablePrinter.printResultSet(cycles);
+//        System.out.println("=====================================Cycles===============================\n\n");
+//
+//        System.out.println("Cycle id    QR_code    Stand_ID    InUSe    InRepair     Model_no\n");
+//        for(int i=0;i<cycles.size();i++){
+//            Cycle cycle=cycles.get(i);
+//            System.out.println(cycle.getCycle_id()+"  "+cycle.getCycle_qr()+"   "+cycle.getStand_id()+"  "+cycle.getInUse()+"  "+cycle.getInRepair()+"  "+cycle.getModel_no());
+//        }
+    }
+    public static void listAllCycle_notinuse(int sid) throws SQLException, ClassNotFoundException {
+
+        ResultSet cycles=Cyclit.db.getAllCycle_notinuse(sid);
+
         net.efabrika.util.DBTablePrinter.printResultSet(cycles);
 //        System.out.println("=====================================Cycles===============================\n\n");
 //

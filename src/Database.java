@@ -198,12 +198,16 @@ public class Database {
         PreparedStatement query = connection.prepareStatement("Select * from OngoingRides where UserId = ?");
         query.setInt(1,id);
         ResultSet resultSet = query.executeQuery();
-        resultSet.next();
-        ride.setUSerID(resultSet.getInt("UserID"));
-        ride.setCycleID(resultSet.getInt("CycleID"));
-        ride.setStandID(resultSet.getInt("StandID"));
-        ride.setOutTime(resultSet.getString("OutTime"));
-        return ride;
+        if(resultSet.next() != false) {
+            ride.setUSerID(resultSet.getInt("UserID"));
+            ride.setCycleID(resultSet.getInt("CycleID"));
+            ride.setStandID(resultSet.getInt("StandID"));
+            ride.setOutTime(resultSet.getString("OutTime"));
+            return ride;
+        }
+        else{
+            return null;
+        }
     }
     public void addCycle(Cycle cycle) throws SQLException{
         PreparedStatement query = connection.prepareStatement("INSERT INTO cycle( cycle_qr ,inUse ,stand_id, inRepair, model_no) values(?,?,?,?,?) ");
@@ -278,6 +282,23 @@ public class Database {
     public static ResultSet getAllCycle(int sid) throws SQLException, ClassNotFoundException {
         PreparedStatement query = connection.prepareStatement("SELECT cycle_id, model_no FROM CYCLE WHERE stand_id = ?");
         query.setInt(1,sid);
+        ResultSet resultSet = query.executeQuery();
+//        ArrayList<Cycle> returnList = new ArrayList<>();
+//        while(resultSet.next()){
+//            Cycle cycle = new Cycle();
+//            cycle.setCycle_id(resultSet.getInt("cycle_id"));
+//            cycle.setCycle_qr((resultSet.getString("cycle_qr")));
+//            cycle.setInUse(resultSet.getBoolean("inUse"));
+//            cycle.setStand_id(resultSet.getInt("stand_id"));
+//            cycle.setInRepair(resultSet.getBoolean("InRepair"));
+//            cycle.setModel_no(resultSet.getString("model_no"));
+//            returnList.add(cycle);
+        return resultSet;
+    }
+
+    public static ResultSet getAllCycle_notinuse(int sid) throws SQLException, ClassNotFoundException {
+        PreparedStatement query = connection.prepareStatement("SELECT cycle_id, model_no FROM CYCLE WHERE stand_id = ? and inUse = 0");
+        query.setInt(1, sid);
         ResultSet resultSet = query.executeQuery();
 //        ArrayList<Cycle> returnList = new ArrayList<>();
 //        while(resultSet.next()){
