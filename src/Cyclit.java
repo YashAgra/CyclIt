@@ -92,8 +92,8 @@ public class Cyclit {
             db = new Database("cycle_manager", "cyclemanager");
         }
         else if(type.equals("Service")){
-            is_serviceMan(emp);
             db = new Database("service_man", "serviceman");
+            is_serviceMan(emp);
         }
         else if(type.equals("PR")){
             is_PRman(emp);
@@ -167,9 +167,9 @@ public class Cyclit {
                 case 11:
                     db.averageCycleUserTime();
                     break;
-                case 12:
-                    db.ListOfServicesClosedbyEmployee();
-                    break;
+//                case 12:
+//                    db.ListOfServicesClosedbyEmployee();
+//                    break;
                 case -1:
                     flag=true;
                     break;
